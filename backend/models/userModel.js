@@ -1,23 +1,23 @@
 import mongoose from "mongoose";
-import {Schema} from "mongoose";
+const { Schema } = mongoose;
 
 const userSchema = new Schema({
   username: {
     type: String,
-    required: [true, "Please enter your name"],
+    required: [true, "Please enter your username."],
     unique: true,
-    maxLength: [30, "Your name cannot exceed 30 characters"],
+    maxLength: [25, "Username must be 25 characters or fewer."],
   },
   email: {
     type: String,
-    required: [true, "Please enter your email"],
+    required: [true, "Please enter your email address."],
     unique: true,
-    match: [/.+\@.+\..+/, "Please enter a valid email address"]
+    match: [/.+\@.+\..+/, "Please enter a valid email address."],
   },
   password: {
     type: String,
-    required: [true, "Please enter your password"],
-    minlength: [6, "Your password must be longer than 6 characters"],
+    required: [true, "Please enter your password."],
+    minlength: [6, "Password must be at least 6 characters long."],
   },
   isAdmin: {
     type: Boolean,
@@ -26,7 +26,7 @@ const userSchema = new Schema({
   },
   fullName: {
     type: String,
-    required: [true, "Please enter your full name"],
+    required: [true, "Please enter your full name."],
   },
   createdAt: {
     type: Date,

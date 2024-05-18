@@ -49,3 +49,5 @@ const submissionSchema = new Schema({
     default: Date.now,
   },
 });
+
+export default mongoose.model("Submission", submissionSchema);
