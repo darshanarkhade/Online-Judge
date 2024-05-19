@@ -4,6 +4,10 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 
 import authRoute from "./routes/auth.route.js";
+import problemRoute from "./routes/problem.route.js";
+import submissionRoute from "./routes/submission.route.js";
+import userRoute from "./routes/user.route.js";
+import leaderboardRoute from "./routes/leaderboard.route.js";
 
 // Load environment variables
 dotenv.config();
@@ -29,15 +33,20 @@ const connect = async () => {
   }
 };
 
+// Routes
+app.use("/api", authRoute);
+app.use("/api", problemRoute);
+app.use("/api", submissionRoute);
+app.use("/api", userRoute);
+app.use("/api", leaderboardRoute);
+
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;
   const errorMessage = err.message || "Something went wrong!";
   return res.status(errorStatus).send(errorMessage);
 });
-
-// Routes
-app.use("/api", authRoute);
 
 // Start server
 app.listen(PORT, () => {
