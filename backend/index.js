@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import cookieParser from 'cookie-parser';
+import cookieParser from "cookie-parser";
 
 import authRoute from "./routes/auth.route.js";
 
@@ -26,7 +26,7 @@ const connect = async () => {
     console.log("Connected to mongoDB!");
   } catch (error) {
     console.log(error);
-  } 
+  }
 };
 
 // Error handling middleware
@@ -34,10 +34,10 @@ app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;
   const errorMessage = err.message || "Something went wrong!";
   return res.status(errorStatus).send(errorMessage);
-});  
+});
 
 // Routes
-app.use("/api/auth", authRoute);
+app.use("/api", authRoute);
 
 // Start server
 app.listen(PORT, () => {
