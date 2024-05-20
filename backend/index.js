@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 import authRoute from "./routes/auth.route.js";
 import problemRoute from "./routes/problem.route.js";
@@ -22,6 +23,7 @@ const MONGO_URI = process.env.MONGO_URI;
 // Middleware
 app.use(express.json()); // Parse JSON bodies
 app.use(cookieParser()); // Parse cookies
+app.use(cors({ origin: "http://localhost:3000", credentials: true })); 
 
 // Connect to MongoDB
 const connect = async () => {

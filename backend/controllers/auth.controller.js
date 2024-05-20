@@ -5,6 +5,9 @@ import createError from "../utils/createError.js";
 
 export const register = async (req, res, next) => {
   try {
+    if(req.body.password.length < 6) {
+      next(createError(400,'Password must be at least 6 characters long'));
+    }
     const hash = bcrypt.hashSync(req.body.password, 10);
     const newUser = new User({
       ...req.body,

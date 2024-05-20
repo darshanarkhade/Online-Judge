@@ -1,21 +1,45 @@
 import React from "react";
+import { useState } from "react";
+import newRequest from "../utils/newRequest";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await newRequest.post("/login", {
+        username,
+        password,
+      });
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
         <a href="/" className="text-3xl font-bold text-blue-500 mt-4 mb-8 cursor-pointer ">Online Judge</a>      
         <div className="w-full max-w-md bg-white rounded-lg shadow-md p-6">
         <h2 className="text-2xl font-bold text-gray-800 mb-4">Login</h2>
-        <form className="flex flex-col">
+        <form className="flex flex-col" onSubmit={handleSubmit}>
           <input
             placeholder="Username"
             className="bg-gray-200 text-gray-800 border border-gray-300 rounded-md p-2 mb-4 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
             type="text"
+            name="username"
+            onChange={(e) => setUsername(e.target.value)}
           />
           <input
             placeholder="Password"
             className="bg-gray-200 text-gray-800 border border-gray-300 rounded-md p-2 mb-4 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
             type="password"
+            name="password"
+            onChange={(e) => setPassword(e.target.value)}
           />
           <div className="flex items-center justify-between flex-wrap">
             {/* <label className="text-sm text-gray-800 cursor-pointer" htmlFor="remember-me">

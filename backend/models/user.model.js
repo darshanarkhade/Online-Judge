@@ -6,7 +6,7 @@ const userSchema = new Schema({
     type: String,
     required: [true, "Please enter your username."],
     unique: true,
-    maxLength: [25, "Username must be 25 characters or fewer."],
+    trim: true,
   },
   email: {
     type: String,
@@ -17,7 +17,6 @@ const userSchema = new Schema({
   password: {
     type: String,
     required: [true, "Please enter your password."],
-    minlength: [6, "Password must be at least 6 characters long."],
   },
   isAdmin: {
     type: Boolean,
