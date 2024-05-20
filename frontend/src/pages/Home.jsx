@@ -37,8 +37,8 @@ export default function Home() {
             <th scope="col" className="px-6 py-3">
               Difficulty
             </th>
-            <th scope="col" className="px-6 py-3">
-              <span className="sr-only">Solve</span>
+            <th scope="col" className="px-6 py-3 pr-14 text-right">
+              Link
             </th>
           </tr>
         </thead>

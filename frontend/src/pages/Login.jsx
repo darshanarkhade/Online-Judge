@@ -12,10 +12,12 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await newRequest.post("/login", {
+      const res= await newRequest.post("/login", {
         username,
         password,
       });
+      //stores the user info in local storage
+      localStorage.setItem("currentUser", JSON.stringify(res.data));
       navigate("/");
     } catch (err) {
       console.log(err);

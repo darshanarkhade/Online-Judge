@@ -25,7 +25,7 @@ export default function ProblemRow({ number, name, difficulty, link }) {
       <td className={`px-6 py-4 rounded-full `}>
         {difficulty}
       </td>
-      <td className="px-6 py-4 text-right">
+      <td className="px-6 py-4 pr-14 text-right">
         <a href={link} className="font-medium text-blue-600 hover:underline">Solve</a>
       </td>
     </tr>
