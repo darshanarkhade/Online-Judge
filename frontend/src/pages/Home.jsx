@@ -1,0 +1,44 @@
+import React from "react";
+import ProblemRow from "../components/ProblemRow";
+
+export default function Home() {
+  const problems = [
+    { name: "Problem 1", difficulty: "Easy", link: "#" },
+    { name: "Problem 2", difficulty: "Medium", link: "#" },
+    { name: "Problem 3", difficulty: "Hard", link: "#" },
+  ];
+
+  return (
+    <div className="relative overflow-x-auto">
+      <table className="w-full text-sm text-left text-gray-500">
+        <thead className="text-xs text-gray-700 uppercase bg-gray-100">
+          <tr>
+            <th scope="col" className="px-3 py-3 w-12 text-center">
+              No.
+            </th>
+            <th scope="col" className="px-6 py-3">
+              Problem Name
+            </th>
+            <th scope="col" className="px-6 py-3">
+              Difficulty
+            </th>
+            <th scope="col" className="px-6 py-3">
+              <span className="sr-only">Solve</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {problems.map((problem, index) => (
+            <ProblemRow
+              key={index}
+              number={index + 1}
+              name={problem.name}
+              difficulty={problem.difficulty}
+              link={problem.link}
+            />
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}

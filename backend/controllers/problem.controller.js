@@ -1,4 +1,4 @@
-export const getProblems= async (req, res, next)=>{
+export const getAllProblems= async (req, res, next)=>{
     try{
 
     }

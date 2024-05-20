@@ -1,4 +1,4 @@
-export const getUserSubmission = async (req, res, next) => {
+export const getAllSubmission = async (req, res, next) => {
     try{
 
     }
