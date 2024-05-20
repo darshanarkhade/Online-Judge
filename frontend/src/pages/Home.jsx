@@ -3,6 +3,21 @@ import ProblemRow from "../components/ProblemRow";
 
 export default function Home() {
   const problems = [
+    { name: "Problem 1", difficulty: "Easy", link: "/problems/2" },
+    { name: "Problem 2", difficulty: "Medium", link: "#" },
+    { name: "Problem 3", difficulty: "Hard", link: "#" },
+    { name: "Problem 1", difficulty: "Easy", link: "#" },
+    { name: "Problem 2", difficulty: "Medium", link: "#" },
+    { name: "Problem 3", difficulty: "Hard", link: "#" },
+    { name: "Problem 1", difficulty: "Easy", link: "#" },
+    { name: "Problem 2", difficulty: "Medium", link: "#" },
+    { name: "Problem 3", difficulty: "Hard", link: "#" },
+    { name: "Problem 1", difficulty: "Easy", link: "#" },
+    { name: "Problem 2", difficulty: "Medium", link: "#" },
+    { name: "Problem 3", difficulty: "Hard", link: "#" },
+    { name: "Problem 1", difficulty: "Easy", link: "#" },
+    { name: "Problem 2", difficulty: "Medium", link: "#" },
+    { name: "Problem 3", difficulty: "Hard", link: "#" },
     { name: "Problem 1", difficulty: "Easy", link: "#" },
     { name: "Problem 2", difficulty: "Medium", link: "#" },
     { name: "Problem 3", difficulty: "Hard", link: "#" },
@@ -10,8 +25,8 @@ export default function Home() {
 
   return (
     <div className="relative overflow-x-auto">
-      <table className="w-full text-sm text-left text-gray-500">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-100">
+      <table className="w-full text-s text-left text-gray-500">
+        <thead className="text-m text-gray-700 uppercase bg-gray-100">
           <tr>
             <th scope="col" className="px-3 py-3 w-12 text-center">
               No.

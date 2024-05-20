@@ -3,7 +3,8 @@ import React from "react";
 export default function Login() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md bg-white rounded-lg shadow-md p-6">
+        <a href="/" className="text-3xl font-bold text-blue-500 mt-4 mb-8 cursor-pointer ">Online Judge</a>      
+        <div className="w-full max-w-md bg-white rounded-lg shadow-md p-6">
         <h2 className="text-2xl font-bold text-gray-800 mb-4">Login</h2>
         <form className="flex flex-col">
           <input
