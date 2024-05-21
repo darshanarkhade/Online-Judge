@@ -7,6 +7,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Problem from "./pages/Problem";
 import Navbar from "./components/Navbar";
+import Leaderboard from "./pages/Leaderboard";
 
 function App() {
   const Layout = () => {
@@ -43,6 +44,10 @@ function App() {
         {
           path: "/submissions",
           element: <Submissions />,
+        },
+        {
+          path: "/leaderboard",
+          element: <Leaderboard />,
         },
       ],
     },
