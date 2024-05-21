@@ -1,6 +1,7 @@
 export const getAllProblems= async (req, res, next)=>{
     try{
-
+        const problems = await Problem.find();
+        res.status(200).send(problems);
     }
     catch(error){
         next(error);

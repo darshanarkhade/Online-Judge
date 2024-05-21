@@ -4,7 +4,6 @@ import { FaUserCircle } from "react-icons/fa";
 export default function Profile() {
 
   const currentUser=JSON.parse(localStorage.getItem("currentUser"));
-  console.log(currentUser);
 
   function formatDate(dateString) {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };

@@ -1,27 +1,45 @@
 import React from "react";
 import ProblemRow from "../components/ProblemRow";
+import { useState,useEffect } from "react";
+import newRequest from "../utils/newRequest";
 
 export default function Home() {
-  const problems = [
-    { name: "Problem 1", difficulty: "Easy", link: "/problems/2" },
-    { name: "Problem 2", difficulty: "Medium", link: "#" },
-    { name: "Problem 3", difficulty: "Hard", link: "#" },
-    { name: "Problem 1", difficulty: "Easy", link: "#" },
-    { name: "Problem 2", difficulty: "Medium", link: "#" },
-    { name: "Problem 3", difficulty: "Hard", link: "#" },
-    { name: "Problem 1", difficulty: "Easy", link: "#" },
-    { name: "Problem 2", difficulty: "Medium", link: "#" },
-    { name: "Problem 3", difficulty: "Hard", link: "#" },
-    { name: "Problem 1", difficulty: "Easy", link: "#" },
-    { name: "Problem 2", difficulty: "Medium", link: "#" },
-    { name: "Problem 3", difficulty: "Hard", link: "#" },
-    { name: "Problem 1", difficulty: "Easy", link: "#" },
-    { name: "Problem 2", difficulty: "Medium", link: "#" },
-    { name: "Problem 3", difficulty: "Hard", link: "#" },
-    { name: "Problem 1", difficulty: "Easy", link: "#" },
-    { name: "Problem 2", difficulty: "Medium", link: "#" },
-    { name: "Problem 3", difficulty: "Hard", link: "#" },
-  ];
+  const [problems, setProblems] = useState([]);
+
+  useEffect(() => {
+    const fetchProblems = async () => {
+      try {
+        const response = await newRequest.get("/problems");
+        setProblems(response.data);
+      } catch (err) {
+        console.log("Error fetching problems:", err);
+      }
+    };
+
+    fetchProblems();
+  }, []);
+
+
+  // const problems2 = [
+  //   { name: "Problem 1", difficulty: "Easy", link: "/problems/2" },
+  //   { name: "Problem 2", difficulty: "Medium", link: "#" },
+  //   { name: "Problem 3", difficulty: "Hard", link: "#" },
+  //   { name: "Problem 1", difficulty: "Easy", link: "#" },
+  //   { name: "Problem 2", difficulty: "Medium", link: "#" },
+  //   { name: "Problem 3", difficulty: "Hard", link: "#" },
+  //   { name: "Problem 1", difficulty: "Easy", link: "#" },
+  //   { name: "Problem 2", difficulty: "Medium", link: "#" },
+  //   { name: "Problem 3", difficulty: "Hard", link: "#" },
+  //   { name: "Problem 1", difficulty: "Easy", link: "#" },
+  //   { name: "Problem 2", difficulty: "Medium", link: "#" },
+  //   { name: "Problem 3", difficulty: "Hard", link: "#" },
+  //   { name: "Problem 1", difficulty: "Easy", link: "#" },
+  //   { name: "Problem 2", difficulty: "Medium", link: "#" },
+  //   { name: "Problem 3", difficulty: "Hard", link: "#" },
+  //   { name: "Problem 1", difficulty: "Easy", link: "#" },
+  //   { name: "Problem 2", difficulty: "Medium", link: "#" },
+  //   { name: "Problem 3", difficulty: "Hard", link: "#" },
+  // ];
 
   return (
     <div className="relative overflow-x-auto">
