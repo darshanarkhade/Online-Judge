@@ -65,9 +65,9 @@ export default function Home() {
             <ProblemRow
               key={index}
               number={index + 1}
-              name={problem.name}
+              name={problem.problemTitle}
               difficulty={problem.difficulty}
-              link={problem.link}
+              id={problem.problemId}
             />
           ))}
         </tbody>
