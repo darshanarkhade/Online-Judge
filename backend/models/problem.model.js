@@ -24,6 +24,15 @@ const problemSchema = new Schema({
       message: 'Difficulty should be either Easy, Medium, or Hard',
     },
   },
+  sampleInput: {
+    type: String,
+    required: [true, "Please enter the input"],
+  },
+  sampleOutput: {
+      type: String,
+      required: [true, "Please enter the output"],
+  },
+  
 
 //   if time permits, add tags to the problem schema
 //   tags: {

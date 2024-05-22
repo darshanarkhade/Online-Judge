@@ -1,7 +1,24 @@
 import React from "react";
 import SubmissionRow from "../components/SubmissionRow";
+import { useState, useEffect } from "react";
+import newRequest from "../utils/newRequest";
 
 export default function Submission() {
+  // const [submissions,setSubmissions ] = useState([]);
+
+  // useEffect(() => {
+  //   const fetchProblems = async () => {
+  //     try {
+  //       const response = await newRequest.get("/submissions");
+  //       setSubmissions(response.data);
+  //     } catch (err) {
+  //       console.log("Error fetching problems:", err);
+  //     }
+  //   };
+
+  //   fetchProblems();
+  // }, []);
+
   const submissions = [
     { 
       name: "Problem 1", 

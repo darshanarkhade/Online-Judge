@@ -3,13 +3,14 @@ import { useNavigate } from "react-router-dom";
 import newRequest from "../utils/newRequest";
 
 export default function AddProblem() {
-
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
   const [formData, setFormData] = useState({
     problemTitle: '',
     difficulty: 'easy',
-    problemStatement: ''
+    problemStatement: '',
+    sampleInput: '',
+    sampleOutput: ''
   });
 
   const handleChange = (e) => {
@@ -24,21 +25,15 @@ export default function AddProblem() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // console.log("formData in addProblem frontend");      
-      // console.log(formData);
       const response = await newRequest.post("/addProblem", formData);
-      // console.log("response from addProblem frontend");
-      // console.log(response);
       const id = response.data; // Extract problemId from response
-      // console.log(response.data );
-      // console.log(id);
       navigate(`/addTestCases/${id}`);
     } catch (err) {
       console.log(err);
     }
   };
 
-  if(!currentUser || !currentUser.isAdmin) return (
+  if (!currentUser || !currentUser.isAdmin) return (
     <div className="message-container">
       <p className="message m-4">
         Sorry, this page is only accessible to Admins.
@@ -55,15 +50,15 @@ export default function AddProblem() {
           <input
             placeholder="Problem Title"
             className="bg-gray-200 text-gray-800 border border-gray-300 rounded-md p-2 mb-2 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
-            type=""
+            type="text"
             name="problemTitle"
             value={formData.problemTitle}
             onChange={handleChange}
           />
           <label className="text-gray-800 font-semibold mb-2">Problem Difficulty</label>
-           <select
+          <select
             className="bg-gray-200 text-gray-800 border border-gray-300 rounded-md p-2 mb-2 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
-            name="difficulty "
+            name="difficulty"
             value={formData.difficulty}
             onChange={handleChange}
           >
@@ -79,6 +74,24 @@ export default function AddProblem() {
             value={formData.problemStatement}
             onChange={handleChange}
             rows="6"
+          />
+          <label className="text-gray-800 font-semibold mb-2">Sample Input</label>
+          <textarea
+            placeholder="Sample Input"
+            className="bg-gray-200 text-gray-800 border border-gray-300 rounded-md p-2 mb-2 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
+            name="sampleInput"
+            value={formData.sampleInput}
+            onChange={handleChange}
+            rows="3"
+          />
+          <label className="text-gray-800 font-semibold mb-2">Sample Output</label>
+          <textarea
+            placeholder="Sample Output"
+            className="bg-gray-200 text-gray-800 border border-gray-300 rounded-md p-2 mb-2 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
+            name="sampleOutput"
+            value={formData.sampleOutput}
+            onChange={handleChange}
+            rows="3"
           />
           <button
             className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-bold py-2 px-4 rounded-md mt-4 hover:bg-indigo-600 hover:to-blue-600 transition ease-in-out duration-150"

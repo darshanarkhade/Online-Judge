@@ -40,11 +40,11 @@ export default function Problem() {
           </div>
           <div className="mb-6">
             <h2 className="text-xl font-semibold mb-2">Sample Input:</h2>
-            <p className="text-gray-800">Sample input goes here...</p>
+            <p className="text-gray-800">{problem.sampleInput}</p>
           </div>
           <div className="mb-6">
             <h2 className="text-xl font-semibold mb-2">Sample Output:</h2>
-            <p className="text-gray-800">Sample output goes here...</p>
+            <p className="text-gray-800">{problem.sampleOutput}</p>
           </div>
           <form onSubmit={handleSubmit}>
             <textarea
@@ -59,7 +59,8 @@ export default function Problem() {
                 <FiPlay className="mr-2" />
                 Run
               </button>
-              <button className="flex items-center justify-center bg-green-500 text-white font-semibold px-6 py-3 rounded-md hover:bg-green-600">
+              <button className="flex items-center justify-center bg-green-500 text-white font-semibold px-6 py-3 rounded-md hover:bg-green-600"
+              type="submit">
                 <FiUpload className="mr-2" />
                 Submit
               </button>

@@ -5,7 +5,7 @@ import Profile from "./pages/Profile";
 import Submissions from "./pages/Submissions";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import Problem from "./pages/Problem";
+import ProblemPage from "./pages/ProblemPage";
 import Navbar from "./components/Navbar";
 import Leaderboard from "./pages/Leaderboard";
 import AddProblem from "./pages/AddProblem";
@@ -37,7 +37,7 @@ function App() {
         },
         {
           path: "/problems/:id",
-          element: <Problem />,
+          element: <ProblemPage />,
         },
         {
           path: "/addProblem",
