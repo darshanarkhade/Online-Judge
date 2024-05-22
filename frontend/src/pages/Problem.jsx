@@ -28,6 +28,7 @@ export default function Problem() {
     setOutput("Sample output goes here...");
   };
 
+  const currentUser=JSON.parse(localStorage.getItem("currentUser"));
   return (
     <div className="container mx-auto px-4 py-8">
       {problem && (
@@ -64,6 +65,18 @@ export default function Problem() {
               </button>
             </div>
           </form>
+          { currentUser && currentUser.isAdmin && (
+            <div className="flex justify-center mb-6">
+            <button className="flex m-2 items-center justify-center bg-green-500 text-white font-semibold px-6 py-3 rounded-md hover:bg-green-600">
+              Update Problem
+            </button>
+            <button className="flex m-2 items-center justify-center bg-green-500 text-white font-semibold px-6 py-3 rounded-md hover:bg-green-600">
+              Update Testcases
+            </button>
+          </div>
+          )
+          }
+          
           <div className="flex">
             <div className="w-1/2 pr-4">
               <h2 className="text-xl font-semibold mb-2">Input:</h2>

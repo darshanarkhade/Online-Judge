@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import newRequest from "../utils/newRequest";
 
 export default function AddProblem() {
+
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
   const [formData, setFormData] = useState({
     problemTitle: '',
     difficulty: 'easy',
@@ -21,14 +24,27 @@ export default function AddProblem() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log("in handleSubmit");
-      console.log(formData);
-      await newRequest.post("/addProblem", formData);
-      navigate("/addtestcases");
+      // console.log("formData in addProblem frontend");      
+      // console.log(formData);
+      const response = await newRequest.post("/addProblem", formData);
+      // console.log("response from addProblem frontend");
+      // console.log(response);
+      const id = response.data; // Extract problemId from response
+      // console.log(response.data );
+      // console.log(id);
+      navigate(`/addTestCases/${id}`);
     } catch (err) {
       console.log(err);
     }
   };
+
+  if(!currentUser || !currentUser.isAdmin) return (
+    <div className="message-container">
+      <p className="message m-4">
+        Sorry, this page is only accessible to Admins.
+      </p>
+    </div>
+  );
 
   return (
     <div className="flex flex-col items-center justify-start min-h-screen bg-gray-100">
@@ -47,7 +63,7 @@ export default function AddProblem() {
           <label className="text-gray-800 font-semibold mb-2">Problem Difficulty</label>
            <select
             className="bg-gray-200 text-gray-800 border border-gray-300 rounded-md p-2 mb-2 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
-            name="problemDifficulty"
+            name="difficulty "
             value={formData.difficulty}
             onChange={handleChange}
           >

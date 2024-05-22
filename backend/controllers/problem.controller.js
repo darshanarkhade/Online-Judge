@@ -1,5 +1,6 @@
 import Problem from "../models/problem.model.js";
 import createError from "../utils/createError.js";
+import TestCases from "../models/testcases.model.js";
 
 export const getAllProblems = async (req, res) => {
     try {
@@ -31,9 +32,30 @@ export const addProblem = async (req, res) => {
         // console.log(req.body);
         const newProblem = new Problem(req.body);
         await newProblem.save();
-        res.status(201).send("Problem has been created");
+        // console.log(newProblem.problemId);
+        res.status(201).send(newProblem._id);
     } catch (error) {
         console.log(error);
     }
 }
+
+export const addTestCases = async (req, res) => {
+    try {
+        const { id } = req.params; // Extract problemId from URL parameters
+        // console.log(id);
+        const testCasesData = req.body; // Test cases data from request body
+        // console.log(testCasesData);
+        // Loop through test cases data and associate them with the corresponding problemId
+        const testCases = testCasesData.map(testCase => ({ ...testCase, problemId: id }));
+
+        // Insert test cases into the database
+        await TestCases.insertMany(testCases);
+        // console.log("Test cases have been added successfully");
+        res.status(201).send("Test cases have been added successfully");
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Internal Server Error");
+    }
+};
+
 

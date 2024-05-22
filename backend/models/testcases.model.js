@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
+import shortid from "shortid";
 
 const testCasesSchema = new Schema({
     testCaseId: {
-        type: Number,
-        required: [true, "Please enter the test case ID"],
+        type: String,
+        default: shortid.generate,
         unique: true,
     },
     problemId: {
