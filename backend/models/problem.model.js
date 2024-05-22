@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
+import shortid from "shortid";
 
 const problemSchema = new Schema({
   problemId: {
-    type: Number,
-    required: [true, "Please enter the problem ID"],
+    type: String,
+    default: shortid.generate,
     unique: true,
   },
   problemTitle: {
@@ -19,7 +20,7 @@ const problemSchema = new Schema({
     type: String,
     required: [true, "Please enter the difficulty level"],
     enum: {
-      values: ['Easy', 'Medium', 'Hard'],
+      values: ['easy', 'medium', 'hard'],
       message: 'Difficulty should be either Easy, Medium, or Hard',
     },
   },

@@ -1,0 +1,77 @@
+import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import newRequest from "../utils/newRequest";
+
+export default function AddProblem() {
+  const [formData, setFormData] = useState({
+    problemTitle: '',
+    difficulty: 'easy',
+    problemStatement: ''
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      console.log("in handleSubmit");
+      console.log(formData);
+      await newRequest.post("/addProblem", formData);
+      navigate("/addtestcases");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-start min-h-screen bg-gray-100">
+      <div className="w-full max-w-lg bg-white rounded-lg shadow-md mt-4 mb-3 p-6">
+        <h2 className="text-2xl text-center font-bold text-gray-800 mb-2">Add Problem</h2>
+        <form className="flex flex-col" onSubmit={handleSubmit} >
+          <label className="text-gray-800 font-semibold mb-2">Problem Title</label>
+          <input
+            placeholder="Problem Title"
+            className="bg-gray-200 text-gray-800 border border-gray-300 rounded-md p-2 mb-2 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
+            type=""
+            name="problemTitle"
+            value={formData.problemTitle}
+            onChange={handleChange}
+          />
+          <label className="text-gray-800 font-semibold mb-2">Problem Difficulty</label>
+           <select
+            className="bg-gray-200 text-gray-800 border border-gray-300 rounded-md p-2 mb-2 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
+            name="problemDifficulty"
+            value={formData.difficulty}
+            onChange={handleChange}
+          >
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+          <label className="text-gray-800 font-semibold mb-2">Problem Statement</label>
+          <textarea
+            placeholder="Problem Statement"
+            className="bg-gray-200 text-gray-800 border border-gray-300 rounded-md p-2 mb-2 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
+            name="problemStatement"
+            value={formData.problemStatement}
+            onChange={handleChange}
+            rows="6"
+          />
+          <button
+            className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-bold py-2 px-4 rounded-md mt-4 hover:bg-indigo-600 hover:to-blue-600 transition ease-in-out duration-150"
+            type="submit"
+          >
+            Add Problem
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}

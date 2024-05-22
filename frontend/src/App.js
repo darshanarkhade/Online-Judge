@@ -8,6 +8,8 @@ import Login from "./pages/Login";
 import Problem from "./pages/Problem";
 import Navbar from "./components/Navbar";
 import Leaderboard from "./pages/Leaderboard";
+import AddProblem from "./pages/AddProblem";
+import AddTestcases from "./pages/AddTestcases";
 
 function App() {
   const Layout = () => {
@@ -34,8 +36,16 @@ function App() {
           element: <Home />,
         },
         {
-          path: "problems/:id",
+          path: "/problems/:id",
           element: <Problem />,
+        },
+        {
+          path: "/addproblem",
+          element: <AddProblem />,
+        },
+        {
+          path: "/addtestcases",
+          element: <AddTestcases />,
         },
         {
           path: "/profile",

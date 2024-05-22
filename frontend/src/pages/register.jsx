@@ -41,6 +41,7 @@ export default function Register() {
             className="bg-gray-200 text-gray-800 border border-gray-300 rounded-md p-2 mb-4 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
             type="text"
             name="username"
+            value={user.username}
             onChange={handleChange}
           />
           <input
@@ -48,6 +49,7 @@ export default function Register() {
             className="bg-gray-200 text-gray-800 border border-gray-300 rounded-md p-2 mb-4 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
             type="text"
             name="fullName"
+            value={user.fullName}
             onChange={handleChange}
           />
           <input
@@ -55,6 +57,7 @@ export default function Register() {
             className="bg-gray-200 text-gray-800 border border-gray-300 rounded-md p-2 mb-4 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
             type="email"
             name="email"
+            value={user.email}
             onChange={handleChange}
           />
           <input
@@ -62,6 +65,7 @@ export default function Register() {
             className="bg-gray-200 text-gray-800 border border-gray-300 rounded-md p-2 mb-4 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
             type="password"
             name="password"
+            value={user.password}
             onChange={handleChange}
           />
           <div className="flex items-center justify-between flex-wrap">

@@ -13,7 +13,6 @@ export default function Navbar() {
   const navigate = useNavigate();
 
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-
   const handleLogout=async (e)=>{
     try {
       await newRequest.post("/logout");
@@ -42,6 +41,13 @@ export default function Navbar() {
             <li>
               <a href="/leaderboard" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Leaderboard</a>
             </li>
+            { currentUser.isAdmin && (
+              <li>
+              <a href="/addproblem" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Add Problem</a>
+            </li>
+            )
+
+            }
           </ul>
         </div>
         {currentUser ? (

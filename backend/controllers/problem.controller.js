@@ -25,8 +25,9 @@ export const getProblemDetails = async (req, res) => {
     }
 }
 
-export const createProblem = async (req, res) => {
+export const addProblem = async (req, res) => {
     try {
+        // console.log("in addProblem");
         // console.log(req.body);
         const newProblem = new Problem(req.body);
         await newProblem.save();
