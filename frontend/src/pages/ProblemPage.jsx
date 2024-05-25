@@ -30,7 +30,7 @@ export default function Problem() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container px-12 py-8">
       {problem && (
         <div>
           <div className="text-center">
@@ -55,6 +55,7 @@ export default function Problem() {
             </div>
           </div>
           <form onSubmit={handleSubmit} className="mb-6">
+            <h2 className="text-xl font-semibold mb-2">Code:</h2>
             <textarea
               className="w-full h-64 border border-gray-300 rounded-md px-4 py-2 mb-4 resize-none"
               value={code}

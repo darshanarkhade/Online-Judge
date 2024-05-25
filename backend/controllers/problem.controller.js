@@ -63,7 +63,7 @@ export const updateProblem = async (req, res) => {
       const { id } = req.params; // Get the problemId from request parameters
       const updatedData = req.body; // New data to update
   
-      console.log(updatedData);
+    //   console.log(updatedData);
 
       // Find the document by problemId and update it
       const updatedProblem = await Problem.findOneAndUpdate(
@@ -72,7 +72,7 @@ export const updateProblem = async (req, res) => {
         { new: true } // Return the updated document
       );
       
-        console.log(updatedProblem);
+        // console.log(updatedProblem);
       // Check if the problem was found and updated successfully
       if (!updatedProblem) {
         return res.status(404).send("Problem not found");
@@ -84,4 +84,36 @@ export const updateProblem = async (req, res) => {
       // Handle errors
       console.log(error);
     }
+};
+
+export const getTestCases = async (req, res) => {
+    const { id } = req.params;
+    try {
+      const testCases = await TestCases.find({ problemId: id});
+    //   console.log(testCases);
+      res.status(200).json(testCases);
+    } catch (err) {
+      console.error('Error fetching test cases:', err);
+      res.status(500).json({ message: 'Internal server error' });
+    }
   };
+  
+
+export const updateTestCases = async (req, res) => {
+    const { id } = req.params;
+    const { testCases } = req.body;
+  
+    try {
+      // Remove existing test cases for the problem
+      await TestCases.deleteMany({ problemId : id});
+  
+      // Insert the updated test cases
+      const updatedTestCases = await TestCases.insertMany(testCases.map(testCase => ({ ...testCase, problemId: id})));
+  
+      res.status(200).json(updatedTestCases);
+    } catch (err) {
+      console.error('Error updating test cases:', err);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  };
+  

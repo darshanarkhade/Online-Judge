@@ -2,7 +2,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export default function ProblemRow({ number, name, difficulty, id, isAdmin }) {
+export default function ProblemRow({ number, name, difficulty, id, isAdmin, mongooseId }) {
   // Function to determine background color based on difficulty
   const getDifficultyColor = (difficulty) => {
     // eslint-disable-next-line default-case
@@ -39,7 +39,7 @@ export default function ProblemRow({ number, name, difficulty, id, isAdmin }) {
       {isAdmin && (
         <td className="px-4 py-2 pr-4 text-right"> {/* Update links visible to admin only */}
           <Link to={`/updateProblem/${id}`} className="text-blue-500 px-3 hover:text-blue-700 mr-2">Update Problem</Link>
-          <Link to={`/updateTestCase/${id}`} className="text-blue-500 px-3 hover:text-blue-700">Update Test Case</Link>
+          <Link to={`/updateTestCases/${mongooseId}`} className="text-blue-500 px-3 hover:text-blue-700">Update Test Case</Link>
         </td>
       )}
     </tr>

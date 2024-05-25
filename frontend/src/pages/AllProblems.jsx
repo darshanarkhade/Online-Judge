@@ -27,7 +27,7 @@ export default function AllProblems() {
       <table className="w-full text-s text-left text-gray-500">
         <thead className="text-m text-gray-700 uppercase bg-gray-300">
           <tr>
-            <th className="px-4 py-3 w-12 text-center">No.</th>
+            <th className="px-5 py-3 w-12 ">No.</th>
             <th className="px-4 py-3 min-w-30% max-w-50%">Problem Name</th>
             <th className="px-4 py-3" style={{ width: "15%" }}>Difficulty</th>
             <th className="px-4 py-3 pr-12 text-right" style={{ width: "15%" }}>Link</th>
@@ -43,6 +43,7 @@ export default function AllProblems() {
               difficulty={problem.difficulty}
               id={problem.problemId}
               isAdmin={isAdmin}
+              mongooseId={problem._id}
             />
           ))}
         </tbody>

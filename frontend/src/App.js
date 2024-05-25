@@ -12,6 +12,7 @@ import AddProblem from "./pages/AddProblem";
 import AddTestCases from "./pages/AddTestCases";
 import AllProblems from "./pages/AllProblems";
 import UpdateProblem from "./pages/UpdateProblem";
+import UpdateTestCases from "./pages/UpdateTestCases";
 
 function App() {
   const Layout = () => {
@@ -48,6 +49,10 @@ function App() {
         {
           path: "/updateProblem/:id",
           element: <UpdateProblem />,
+        },
+        {
+          path: "/updateTestCases/:id",
+          element: <UpdateTestCases />,
         },
         {
           path: "/addTestCases/:id",
