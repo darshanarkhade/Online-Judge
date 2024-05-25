@@ -1,9 +1,12 @@
-import React from "react";
+// AllProblems.js
+import React, { useState, useEffect } from "react";
 import ProblemRow from "../components/ProblemRow";
-import { useState,useEffect } from "react";
 import newRequest from "../utils/newRequest";
 
 export default function AllProblems() {
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const isAdmin = currentUser && currentUser.isAdmin;
+
   const [problems, setProblems] = useState([]);
 
   useEffect(() => {
@@ -19,45 +22,16 @@ export default function AllProblems() {
     fetchProblems();
   }, []);
 
-
-  // const problems2 = [
-  //   { name: "Problem 1", difficulty: "Easy", link: "/problems/2" },
-  //   { name: "Problem 2", difficulty: "Medium", link: "#" },
-  //   { name: "Problem 3", difficulty: "Hard", link: "#" },
-  //   { name: "Problem 1", difficulty: "Easy", link: "#" },
-  //   { name: "Problem 2", difficulty: "Medium", link: "#" },
-  //   { name: "Problem 3", difficulty: "Hard", link: "#" },
-  //   { name: "Problem 1", difficulty: "Easy", link: "#" },
-  //   { name: "Problem 2", difficulty: "Medium", link: "#" },
-  //   { name: "Problem 3", difficulty: "Hard", link: "#" },
-  //   { name: "Problem 1", difficulty: "Easy", link: "#" },
-  //   { name: "Problem 2", difficulty: "Medium", link: "#" },
-  //   { name: "Problem 3", difficulty: "Hard", link: "#" },
-  //   { name: "Problem 1", difficulty: "Easy", link: "#" },
-  //   { name: "Problem 2", difficulty: "Medium", link: "#" },
-  //   { name: "Problem 3", difficulty: "Hard", link: "#" },
-  //   { name: "Problem 1", difficulty: "Easy", link: "#" },
-  //   { name: "Problem 2", difficulty: "Medium", link: "#" },
-  //   { name: "Problem 3", difficulty: "Hard", link: "#" },
-  // ];
-
   return (
     <div className="relative overflow-x-auto">
       <table className="w-full text-s text-left text-gray-500">
         <thead className="text-m text-gray-700 uppercase bg-gray-300">
           <tr>
-            <th scope="col" className="px-3 py-3 w-12 text-center">
-              No.
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Problem Name
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Difficulty
-            </th>
-            <th scope="col" className="px-6 py-3 pr-14 text-right">
-              Link
-            </th>
+            <th className="px-4 py-3 w-12 text-center">No.</th>
+            <th className="px-4 py-3 min-w-30% max-w-50%">Problem Name</th>
+            <th className="px-4 py-3" style={{ width: "15%" }}>Difficulty</th>
+            <th className="px-4 py-3 pr-12 text-right" style={{ width: "15%" }}>Link</th>
+            {isAdmin && <th className="px-4 py-3 pr-4 text-center" style={{ width: "30%" }}>Actions</th>}
           </tr>
         </thead>
         <tbody>
@@ -68,6 +42,7 @@ export default function AllProblems() {
               name={problem.problemTitle}
               difficulty={problem.difficulty}
               id={problem.problemId}
+              isAdmin={isAdmin}
             />
           ))}
         </tbody>

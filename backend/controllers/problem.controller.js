@@ -58,4 +58,30 @@ export const addTestCases = async (req, res) => {
     }
 };
 
+export const updateProblem = async (req, res) => {
+    try {
+      const { id } = req.params; // Get the problemId from request parameters
+      const updatedData = req.body; // New data to update
+  
+      // console.log(updatedData);
 
+      // Find the document by problemId and update it
+      const updatedProblem = await Problem.findOneAndUpdate(
+        { problemId: id }, // Find by problemId
+        updatedData, // New data to update
+        { new: true } // Return the updated document
+      );
+      
+      //   console.log(updatedProblem);
+      // Check if the problem was found and updated successfully
+      if (!updatedProblem) {
+        return res.status(404).send("Problem not found");
+      }
+  
+      // Send a success response
+      res.status(200).send(id);
+    } catch (error) {
+      // Handle errors
+      console.log(error);
+    }
+  };

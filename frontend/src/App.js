@@ -11,6 +11,7 @@ import Leaderboard from "./pages/Leaderboard";
 import AddProblem from "./pages/AddProblem";
 import AddTestCases from "./pages/AddTestCases";
 import AllProblems from "./pages/AllProblems";
+import UpdateProblem from "./pages/UpdateProblem";
 
 function App() {
   const Layout = () => {
@@ -43,6 +44,10 @@ function App() {
         {
           path: "/addProblem",
           element: <AddProblem />,
+        },
+        {
+          path: "/updateProblem/:id",
+          element: <UpdateProblem />,
         },
         {
           path: "/addTestCases/:id",
