@@ -36,7 +36,8 @@ export const login = async (req, res, next) => {
         id: user._id,
         isAdmin: user.isAdmin,
       },
-      process.env.SECRET_KEY
+      process.env.SECRET_KEY,
+      { expiresIn: "1h" }
     );
 
     const { password, ...info } = user._doc;

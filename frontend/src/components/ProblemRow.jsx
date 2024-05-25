@@ -27,7 +27,7 @@ export default function ProblemRow({ number, name, difficulty, id }) {
         {difficulty}
       </td>
       <td className="px-6 py-4 pr-14 text-right">
-        <Link to={`/problems/${id}`} className="font-medium text-blue-600 hover:underline">Solve</Link>
+        <Link to={`/problems/${id}`} className="font-medium text-blue-600 hover:underline">View</Link>
       </td>
     </tr>
   );

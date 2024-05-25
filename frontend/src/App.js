@@ -10,6 +10,7 @@ import Navbar from "./components/Navbar";
 import Leaderboard from "./pages/Leaderboard";
 import AddProblem from "./pages/AddProblem";
 import AddTestCases from "./pages/AddTestCases";
+import AllProblems from "./pages/AllProblems";
 
 function App() {
   const Layout = () => {
@@ -33,7 +34,7 @@ function App() {
         },
         {
           path: "/problems",
-          element: <Home />,
+          element: <AllProblems />,
         },
         {
           path: "/problems/:id",

@@ -43,7 +43,7 @@ export default function AddProblem() {
 
   return (
     <div className="flex flex-col items-center justify-start min-h-screen bg-gray-100">
-      <div className="w-full max-w-lg bg-white rounded-lg shadow-md mt-4 mb-3 p-6">
+      <div className="w-full max-w-2xl bg-white rounded-lg shadow-md mt-4 mb-3 p-6">
         <h2 className="text-2xl text-center font-bold text-gray-800 mb-2">Add Problem</h2>
         <form className="flex flex-col" onSubmit={handleSubmit} >
           <label className="text-gray-800 font-semibold mb-2">Problem Title</label>

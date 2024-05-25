@@ -82,7 +82,7 @@ export default function Submission() {
   return (
     <div className="relative overflow-x-auto">
       <table className="w-full text-s text-left text-gray-500">
-        <thead className="text-m text-gray-700 uppercase bg-gray-100">
+        <thead className="text-m text-gray-700 uppercase bg-gray-300">
           <tr>
             <th scope="col" className="px-3 py-3 w-12 text-center">
               No.
