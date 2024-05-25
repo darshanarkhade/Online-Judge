@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { useNavigate } from "react-router-dom";
 import newRequest from "../utils/newRequest";
 import { useParams } from "react-router-dom";
@@ -13,7 +13,9 @@ export default function AddProblem() {
     difficulty: 'easy',
     problemStatement: '',
     sampleInput: '',
-    sampleOutput: ''
+    sampleOutput: '',
+    memoryLimit: '',
+    timeLimit: ''
   });
 
   useEffect(() => {
@@ -25,7 +27,9 @@ export default function AddProblem() {
           difficulty: response.data.difficulty,
           problemStatement: response.data.problemStatement,
           sampleInput: response.data.sampleInput,
-          sampleOutput: response.data.sampleOutput
+          sampleOutput: response.data.sampleOutput,
+          memoryLimit: response.data.memoryLimit,
+          timeLimit: response.data.timeLimit
         });
       } catch (err) {
         console.error("Error fetching problem:", err);
@@ -43,13 +47,13 @@ export default function AddProblem() {
   };
  
   const handleSubmit = async (e) => {
-    // e.preventDefault();
+    e.preventDefault();
     try {
-        // console.log("in handleSubmit");
+        console.log("in handleSubmit");
       const response = await newRequest.put(`/updateProblem/${id}`, formData);
-        // console.log(response);
+        console.log(response);
         //lets navigate to the problem page
-      navigate(`/problems/${response.data}`);
+      navigate(`/problems`);
     } catch (err) {
       console.log(err);
     }
@@ -114,6 +118,24 @@ export default function AddProblem() {
             value={formData.sampleOutput}
             onChange={handleChange}
             rows="3"
+          />
+          <label className="text-gray-800 font-semibold mb-2">Memory Limit (MB)</label>
+          <input
+            placeholder="Memory Limit"
+            className="bg-gray-200 text-gray-800 border border-gray-300 rounded-md p-2 mb-2 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
+            type="text"
+            name="memoryLimit"
+            value={formData.memoryLimit}
+            onChange={handleChange}
+          />
+          <label className="text-gray-800 font-semibold mb-2">Time Limit (sec)</label>
+          <input
+            placeholder="Time Limit"
+            className="bg-gray-200 text-gray-800 border border-gray-300 rounded-md p-2 mb-2 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
+            type="text"
+            name="timeLimit"
+            value={formData.timeLimit}
+            onChange={handleChange}
           />
           <button
             className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-bold py-2 px-4 rounded-md mt-4 hover:bg-indigo-600 hover:to-blue-600 transition ease-in-out duration-150"

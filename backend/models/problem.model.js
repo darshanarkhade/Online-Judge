@@ -29,8 +29,16 @@ const problemSchema = new Schema({
     required: [true, "Please enter the input"],
   },
   sampleOutput: {
-      type: String,
-      required: [true, "Please enter the output"],
+    type: String,
+    required: [true, "Please enter the output"],
+  },
+  memoryLimit: {
+    type: Number,
+    required: [true, "Please enter the memory limit"],
+  },
+  timeLimit: {
+    type: Number,
+    required: [true, "Please enter the time limit"],
   },
   
 

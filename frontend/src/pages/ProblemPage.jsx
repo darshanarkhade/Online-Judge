@@ -8,6 +8,7 @@ export default function Problem() {
   const [problem, setProblem] = useState(null);
   const [code, setCode] = useState("");
   const [output, setOutput] = useState("");
+  const [input, setInput] = useState("");
 
   useEffect(() => {
     const fetchProblem = async () => {
@@ -32,34 +33,41 @@ export default function Problem() {
     <div className="container mx-auto px-4 py-8">
       {problem && (
         <div>
-          <h1 className="text-3xl font-bold mb-4">{problem.problemTitle} </h1>
-          <div className="mb-6">
-            <h2 className="text-xl font-semibold mb-2">{problem.difficulty}</h2>
-            <p className="text-gray-800">{problem.problemStatement}.</p>
+          <div className="text-center">
+            <h1 className="text-3xl font-bold mb-4">{problem.problemTitle} </h1>
+            <div className="text-sm text-gray-600 mb-4">
+              <h2 className="text-sm font-semibold mb-2">Memory Limit: {problem.memoryLimit} megabytes </h2>
+              <h2 className="text-sm font-semibold mb-2">Time Limit: {problem.timeLimit} seconds</h2>
+              <p className="mb-2">Input: Standard Input</p>
+              <p className="mb-2">Output: Standard Output</p>
+            </div>
           </div>
-          <div className="mb-6">
-            <h2 className="text-xl font-semibold mb-2">Sample Input:</h2>
-            <p className="text-gray-800">{problem.sampleInput}</p>
+          <h2 className="text-m font-semibold mb-2">Problem Difficulty:  {problem.difficulty}</h2>
+          <p className="mb-6">{problem.problemStatement}.</p>
+          <div className="flex mb-6">
+            <div className="w-1/2 pr-2">
+              <h2 className="text-xl font-semibold mb-2">Sample Input:</h2>
+              <p className="border border-gray-300 rounded-md p-2 h-32 overflow-auto text-gray-800">{problem.sampleInput}</p>
+            </div>
+            <div className="w-1/2 pl-2">
+              <h2 className="text-xl font-semibold mb-2">Sample Output:</h2>
+              <p className="border border-gray-300 rounded-md p-2 h-32 overflow-auto text-gray-800">{problem.sampleOutput}</p>
+            </div>
           </div>
-          <div className="mb-6">
-            <h2 className="text-xl font-semibold mb-2">Sample Output:</h2>
-            <p className="text-gray-800">{problem.sampleOutput}</p>
-          </div>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="mb-6">
             <textarea
-              className="w-full h-96 border border-gray-300 rounded-md px-4 py-2 mb-4 resize-none"
+              className="w-full h-64 border border-gray-300 rounded-md px-4 py-2 mb-4 resize-none"
               value={code}
               onChange={(e) => setCode(e.target.value)}
               placeholder="Enter your code here..."
               required
             ></textarea>
-            <div className="flex justify-center mb-6">
+            <div className="flex justify-center">
               <button className="flex items-center justify-center bg-blue-500 text-white font-semibold px-6 py-3 rounded-md mr-4 hover:bg-blue-600">
                 <FiPlay className="mr-2" />
                 Run
               </button>
-              <button className="flex items-center justify-center bg-green-500 text-white font-semibold px-6 py-3 rounded-md hover:bg-green-600"
-              type="submit">
+              <button className="flex items-center justify-center bg-green-500 text-white font-semibold px-6 py-3 rounded-md hover:bg-green-600" type="submit">
                 <FiUpload className="mr-2" />
                 Submit
               </button>
@@ -70,6 +78,8 @@ export default function Problem() {
               <h2 className="text-xl font-semibold mb-2">Input:</h2>
               <textarea
                 className="w-full h-48 border border-gray-300 rounded-md px-4 py-2 mb-4 resize-none"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
                 placeholder="Enter input here..."
                 required
               ></textarea>
@@ -81,6 +91,7 @@ export default function Problem() {
               </div>
             </div>
           </div>
+          
         </div>
       )}
     </div>

@@ -63,7 +63,7 @@ export const updateProblem = async (req, res) => {
       const { id } = req.params; // Get the problemId from request parameters
       const updatedData = req.body; // New data to update
   
-      // console.log(updatedData);
+      console.log(updatedData);
 
       // Find the document by problemId and update it
       const updatedProblem = await Problem.findOneAndUpdate(
@@ -72,7 +72,7 @@ export const updateProblem = async (req, res) => {
         { new: true } // Return the updated document
       );
       
-      //   console.log(updatedProblem);
+        console.log(updatedProblem);
       // Check if the problem was found and updated successfully
       if (!updatedProblem) {
         return res.status(404).send("Problem not found");
