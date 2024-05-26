@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllProblems, getProblemDetails, addProblem ,addTestCases, updateProblem, updateTestCases, getTestCases } from '../controllers/problem.controller.js';
+import { getAllProblems, getProblemDetails, addProblem ,addTestCases, updateProblem, getTestCases, updateTestCase, addTestCase } from '../controllers/problem.controller.js';
 import {isAdmin} from '../middleware/isAdmin.js';
 
 const router = express.Router();
@@ -11,7 +11,9 @@ router.get('/problems/:id', getProblemDetails);
 router.post('/addProblem', isAdmin, addProblem);
 router.post('/addTestCases/:id', isAdmin, addTestCases);
 router.put('/updateProblem/:id', isAdmin, updateProblem);
-router.put('/updateTestCases/:id', isAdmin, updateTestCases);
+// router.put('/updateTestCases/:id', isAdmin, updateTestCases);
 router.get('/testCases/:id', isAdmin, getTestCases);
+router.put('/updateTestCase/:id', isAdmin, updateTestCase);
+router.post('/addTestCase/:id', isAdmin, addTestCase);
 // router.delete('/deleteProblem/:id', isAdmin, deleteProblem);
 export default router;

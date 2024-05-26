@@ -28,41 +28,84 @@ export default function UpdateTestCases() {
   };
 
   const handleSubmit = async (e) => {
+    //we have to add only new testcases as we have updated the old ones , so handlesubmitt will call
+    //addTestCase for each new testcase
     e.preventDefault();
     try {
-      await newRequest.put(`/updateTestCases/${id}`, { testCases });
+      // filter returns only the test cases that don't have an _id and promise.all will wait for all the promises to resolve
+      await Promise.all(
+        testCases
+          .filter((testCase) => !testCase._id)
+          .map((testCase) => newRequest.post(`/addTestCase/${id}`, testCase))
+      );
       navigate('/');
     } catch (err) {
       console.error('Error updating test cases:', err);
     }
   };
 
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     await newRequest.post(`/updateTestCases/${id}`, { testCases });
+  //     navigate('/');
+  //   } catch (err) {
+  //     console.error('Error updating test cases:', err);
+  //   }
+  // };
+
   const addTestCase = () => {
     setTestCases([...testCases, { input: '', output: '' }]);
   };
 
+  const handleUpdate = async (index) => {
+    try {
+      await newRequest.put(`/updateTestCase/${testCases[index]._id}`, {
+        input: testCases[index].input,
+        output: testCases[index].output,
+      });
+    } catch (err) {
+      console.error('Error updating test case:', err);
+    }
+  };
+
+  
   return (
     <div className="container mx-auto px-4 py-8">
       <h2 className="text-2xl font-bold mb-4">Update Test Cases</h2>
       <form onSubmit={handleSubmit}>
-        {testCases.map((testCase, index) => (
-          <div key={index} className="mb-4">
-            <input
-              type="text"
-              value={testCase.input}
-              onChange={(e) => handleChange(index, 'input', e.target.value)}
-              placeholder="Input"
-              className="border border-gray-300 rounded-md p-2 mr-2"
-            />
-            <input
-              type="text"
-              value={testCase.output}
-              onChange={(e) => handleChange(index, 'output', e.target.value)}
-              placeholder="Expected Output"
-              className="border border-gray-300 rounded-md p-2"
-            />
-          </div>
-        ))}
+      {testCases.map((testCase, index) => (
+        //key is used to uniquely identify each element in the list
+        <div key={index} className="mb-4">
+          <p>Test Case {index + 1}</p>
+          <input
+            type="text"
+            value={testCase.input}
+            onChange={(e) => handleChange(index, 'input', e.target.value)}
+            placeholder="Input"
+            className="border border-gray-300 rounded-md p-2 mr-2"
+          />
+          <input
+            type="text"
+            value={testCase.output}
+            onChange={(e) => handleChange(index, 'output', e.target.value)}
+            placeholder="Expected Output"
+            className="border border-gray-300 rounded-md p-2"
+          />
+          {testCase._id && (
+            <button
+              type="button"
+              onClick={() => handleUpdate(index)}
+              className="bg-green-500 text-white font-semibold py-2 px-4 m-2 rounded-md hover:bg-green-600"
+            >
+              Update Test Case
+            </button>
+          )}
+        </div>
+      ))}
+
+
         <button
           type="button"
           onClick={addTestCase}

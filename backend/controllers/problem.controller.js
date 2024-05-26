@@ -99,21 +99,58 @@ export const getTestCases = async (req, res) => {
   };
   
 
-export const updateTestCases = async (req, res) => {
-    const { id } = req.params;
-    const { testCases } = req.body;
-  
-    try {
-      // Remove existing test cases for the problem
-      await TestCases.deleteMany({ problemId : id});
-  
-      // Insert the updated test cases
-      const updatedTestCases = await TestCases.insertMany(testCases.map(testCase => ({ ...testCase, problemId: id})));
-  
-      res.status(200).json(updatedTestCases);
-    } catch (err) {
-      console.error('Error updating test cases:', err);
-      res.status(500).json({ message: 'Internal server error' });
+// export const updateTestCases = async (req, res) => {
+//   const { id } = req.params;
+//   const { testCases } = req.body;
+
+//   try {
+//     // Remove existing test cases for the problem
+//     await TestCases.deleteMany({ problemId : id});
+
+//     // Insert the updated test cases
+//     const updatedTestCases = await TestCases.insertMany(testCases.map(testCase => ({ ...testCase, problemId: id})));
+
+//     res.status(200).json(updatedTestCases);
+//   } catch (err) {
+//     console.error('Error updating test cases:', err);
+//     res.status(500).json({ message: 'Internal server error' });
+//   }
+// };
+
+export const updateTestCase = async (req, res) => {
+  const { id } = req.params;
+  const { input, output } = req.body;
+
+  try {
+    const updatedTestCase = await TestCases.findOneAndUpdate(
+      { _id: id },
+      { input, output },
+      { new: true }
+    );
+
+    if (!updatedTestCase) {
+      return res.status(404).json({ message: 'Test case not found' });
     }
-  };
+
+    res.status(200).json(updatedTestCase);
+  } catch (err) {
+    console.error('Error updating test case:', err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+ 
+export const addTestCase = async (req, res) => {
+  const { id } = req.params;
+  const { input, output } = req.body;
+
+  try {
+    const newTestCase = new TestCases({ input, output, problemId: id });
+    await newTestCase.save();
+
+    res.status(201).json(newTestCase);
+  } catch (err) {
+    console.error('Error adding test case:', err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
   
