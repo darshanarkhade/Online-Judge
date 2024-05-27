@@ -26,7 +26,7 @@ export default function Navbar() {
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900 relative">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
+        <a href="/" className="flex pl-4 items-center space-x-3 rtl:space-x-reverse">
           <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">CodeQuest</span>
         </a>
         
@@ -51,7 +51,7 @@ export default function Navbar() {
           </ul>
         </div>
         {currentUser ? (
-            <div className="flex pr-12 items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse relative">
+            <div className="flex pr-8 items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse relative">
             <button type="button" className="flex text-sm bg-white-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" onClick={toggleDropdown}>
                 <span className="sr-only">Open user menu</span>
                 <AiOutlineUser color="#ffffff" size={25} />

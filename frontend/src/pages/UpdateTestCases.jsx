@@ -70,7 +70,21 @@ export default function UpdateTestCases() {
     }
   };
 
-  
+  const handleDelete = async (index) => {
+    try{
+      if(!testCases[index]._id){
+        setTestCases(testCases.filter((_, i) => i !== index));
+        return;
+      }
+      await newRequest.delete(`/deleteTestCase/${testCases[index]._id}`);
+      //_ is used to ignore the first argument which is the element itself
+      setTestCases(testCases.filter((_, i) => i !== index));
+    }catch(err){
+      console.error('Error deleting test case:', err);
+    }
+  }
+
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h2 className="text-2xl font-bold mb-4">Update Test Cases</h2>
@@ -102,6 +116,15 @@ export default function UpdateTestCases() {
               Update Test Case
             </button>
           )}
+          
+          <button
+            type="button"
+            onClick={() => handleDelete(index)}
+            className="bg-red-500 text-white font-semibold py-2 px-3 m-2 rounded-md hover:bg-red-600"
+          >
+            Delete Test Case
+          </button>
+          
         </div>
       ))}
 

@@ -39,24 +39,20 @@ export const addProblem = async (req, res) => {
     }
 }
 
-export const addTestCases = async (req, res) => {
-    try {
-        const { id } = req.params; // Extract problemId from URL parameters
-        // console.log(id);
-        const testCasesData = req.body; // Test cases data from request body
-        // console.log(testCasesData);
-        // Loop through test cases data and associate them with the corresponding problemId
-        const testCases = testCasesData.map(testCase => ({ ...testCase, problemId: id }));
-
-        // Insert test cases into the database
-        await TestCases.insertMany(testCases);
-        // console.log("Test cases have been added successfully");
-        res.status(201).send("Test cases have been added successfully");
-    } catch (error) {
-        console.log(error);
-        res.status(500).send("Internal Server Error");
+export const deleteProblem = async (req, res) => {
+  //do not use findByIdAndDelete as it does not trigger the pre remove middleware
+  //instead use findOneAndDelete
+  try{
+    const {id}=req.params;
+    const problem = await Problem.findOneAndDelete({problemId:id});
+    if(!problem){
+      throw createError(404,"Problem not found");
     }
-};
+    res.status(200).send("Problem deleted successfully");
+  }catch(error){
+    console.log(error);
+  }
+} 
 
 export const updateProblem = async (req, res) => {
     try {
@@ -86,9 +82,29 @@ export const updateProblem = async (req, res) => {
     }
 };
 
+export const addTestCases = async (req, res) => {
+  try {
+      const { id } = req.params; // Extract problemId from URL parameters
+      // console.log(id);
+      const testCasesData = req.body; // Test cases data from request body
+      // console.log(testCasesData);
+      // Loop through test cases data and associate them with the corresponding problemId
+      const testCases = testCasesData.map(testCase => ({ ...testCase, problemId: id }));
+
+      // Insert test cases into the database
+      await TestCases.insertMany(testCases);
+      // console.log("Test cases have been added successfully");
+      res.status(201).send("Test cases have been added successfully");
+  } catch (error) {
+      console.log(error);
+      res.status(500).send("Internal Server Error");
+  }
+};
+
+
 export const getTestCases = async (req, res) => {
-    const { id } = req.params;
     try {
+      const { id } = req.params;
       const testCases = await TestCases.find({ problemId: id});
     //   console.log(testCases);
       res.status(200).json(testCases);
@@ -118,10 +134,10 @@ export const getTestCases = async (req, res) => {
 // };
 
 export const updateTestCase = async (req, res) => {
-  const { id } = req.params;
-  const { input, output } = req.body;
-
   try {
+    const { id } = req.params;
+    const { input, output } = req.body;
+  
     const updatedTestCase = await TestCases.findOneAndUpdate(
       { _id: id },
       { input, output },
@@ -140,10 +156,10 @@ export const updateTestCase = async (req, res) => {
 }
  
 export const addTestCase = async (req, res) => {
-  const { id } = req.params;
-  const { input, output } = req.body;
-
   try {
+    const { id } = req.params;
+    const { input, output } = req.body;
+  
     const newTestCase = new TestCases({ input, output, problemId: id });
     await newTestCase.save();
 
@@ -153,4 +169,27 @@ export const addTestCase = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 }
+ 
+export const deleteTestCase = async (req, res) => {
+  try{
+    const {id}=req.params;
+    const testCase = await TestCases.findOneAndDelete({_id:id});
+    if(!testCase){
+      throw createError(404,"Test case not found");
+    }
+    res.status(200).send("Test case deleted successfully");
+  }catch(error){
+    console.log(error);
+  }
+}
   
+export const deleteTestCasesOfProblem = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await TestCases.deleteMany({ problemId: id });
+    res.status(200).send("Test cases deleted successfully");
+  } catch (err) {
+    console.error('Error deleting test cases:', err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
