@@ -24,6 +24,7 @@ const MONGO_URI = process.env.MONGO_URI;
 app.use(express.json()); // Parse JSON bodies
 app.use(cookieParser()); // Parse cookies
 app.use(cors({ origin: "http://localhost:3000", credentials: true })); 
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 
 // Connect to MongoDB
 const connect = async () => {
@@ -47,7 +48,7 @@ app.use("/api", leaderboardRoute);
 app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;
   const errorMessage = err.message || "Something went wrong!";
-  return res.status(errorStatus).send(errorMessage);
+  return res.status(errorStatus).json({ message: errorMessage });
 });
 
 // Start server
