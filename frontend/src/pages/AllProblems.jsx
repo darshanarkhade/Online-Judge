@@ -23,31 +23,33 @@ export default function AllProblems() {
   }, []);
 
   return (
-    <div className="relative overflow-x-auto">
-      <table className="w-full text-s text-left text-gray-500">
-        <thead className="text-m text-gray-700 uppercase bg-gray-300">
-          <tr>
-            <th className="px-5 py-3 w-12 ">No.</th>
-            <th className="px-4 py-3 min-w-30% max-w-50%">Problem Name</th>
-            <th className="px-4 py-3" style={{ width: "15%" }}>Difficulty</th>
-            <th className="px-4 py-3 pr-12 text-right" style={{ width: "15%" }}>Link</th>
-            {isAdmin && <th className="px-4 py-3 pr-4 text-center" style={{ width: "30%" }}>Actions</th>}
-          </tr>
-        </thead>
-        <tbody>
-          {problems.map((problem, index) => (
-            <ProblemRow
-              key={index}
-              number={index + 1}
-              name={problem.problemTitle}
-              difficulty={problem.difficulty}
-              id={problem.problemId}
-              isAdmin={isAdmin}
-              mongooseId={problem._id}
-            />
-          ))}
-        </tbody>
-      </table>
+    <div className="container  mx-auto px-4 py-8">
+      <div className="overflow-x-auto">
+        <table className="w-full text-m text-left 2xl text-gray-700 rounded-lg border border-gray-300 border-collapse">
+          <thead className="bg-gray-200">
+            <tr>
+              <th className="px-6 py-3 w-12">#</th>
+              <th className="px-6 py-3">Problem Name</th>
+              <th className="px-6 py-3">Difficulty</th>
+              <th className="px-6 py-3 text-center">Link</th>
+              {isAdmin && <th className="px-6 py-3 text-center">Actions</th>}
+            </tr>
+          </thead>
+          <tbody>
+            {problems.map((problem, index) => (
+              <ProblemRow
+                key={index}
+                number={index + 1}
+                name={problem.problemTitle}
+                difficulty={problem.difficulty}
+                id={problem.problemId}
+                isAdmin={isAdmin}
+                mongooseId={problem._id}
+              />
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
