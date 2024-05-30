@@ -2,16 +2,32 @@ import React, { useState, useEffect } from "react";
 import { FiPlay, FiUpload } from "react-icons/fi";
 import { useParams } from "react-router-dom";
 import newRequest from "../utils/newRequest";
+import Editor from 'react-simple-code-editor';
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/themes/prism.css';
+
 
 export default function Problem() {
   const { id } = useParams();
   const [problem, setProblem] = useState(null);
+  const [selectedLanguage, setSelectedLanguage] = useState("cpp");
   const [code, setCode] = useState("");
   const [output, setOutput] = useState("");
   const [inputValue, setInputValue] = useState("");
-  const [sampleInput, setSampleInput] = useState("");
-  const [sampleOutput, setSampleOutput] = useState("");
-  const [selectedLanguage, setSelectedLanguage] = useState("c++");
+
+  useEffect(() => {
+    // Set initial code based on selected language
+    if (selectedLanguage === "cpp") {
+      setCode(`// Include the input/output stream library\n#include <iostream>\n\n// Define the main function\nint main() {\n    // Output "Hello World!" to the console\n    std::cout << "Hello World!";\n\n    // Return 0 to indicate successful execution\n    return 0;\n}`);
+    } else if (selectedLanguage === "py") {
+      setCode(`# Define the main function\ndef main():\n    # Output "Hello World!" to the console\n    print("Hello World!")\n\n# Call the main function\nif __name__ == "__main__":\n    main()`);
+    } else if (selectedLanguage === "java") {
+      setCode(`// Define the class\npublic class Main {\n    // Define the main method\n    public static void main(String[] args) {\n        // Output "Hello World!" to the console\n        System.out.println("Hello World!");\n    }\n}`);
+    }
+  }, [selectedLanguage]);
+  
 
   useEffect(() => {
     const fetchProblem = async () => {
@@ -31,6 +47,18 @@ export default function Problem() {
     // Implement logic to process code and generate output
     setOutput("Sample output goes here...");
   };
+
+  const handleRunCode = async () => {
+    try {
+      const response = await newRequest.post("/run", {
+        code,
+        language: selectedLanguage,
+      });
+      setOutput(response.data.output);
+    } catch (err) {
+      console.error("Error running code:", err);
+    }
+  }
 
   return (
     <div className="container mx-auto px-4 py-4">
@@ -75,20 +103,32 @@ export default function Problem() {
                   value={selectedLanguage}
                   onChange={(e) => setSelectedLanguage(e.target.value)}
                 >
-                  <option value="c++">C++</option>
-                  <option value="python">Python</option>
+                  <option value="cpp">C++</option>
+                  <option value="py">Python</option>
                   <option value="java">Java</option>
                 </select>
               </div>
-              <textarea
-                className="w-full h-96 border border-gray-300 rounded-md px-4 py-2 mb-4 resize-none text-gray-800 bg-gray-50 shadow-inner"
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-                placeholder="Enter your code here..."
-                required
-              ></textarea>
+              <div className="bg-gray-100 shadow-md w-full max-w-lg mb-4" style={{ height: '380px', overflowY: 'auto' }}>
+                <Editor
+                  value={code}
+                  onValueChange={code => setCode(code)}
+                  highlight={code => highlight(code, languages.js)}
+                  padding={10}
+                  style={{
+                    fontFamily: '"Fira code", "Fira Mono", monospace',
+                    fontSize: 12,
+                    outline: 'none',
+                    border: 'none',
+                    backgroundColor: '#f7fafc',
+                    height: '100%',
+                    overflowY: 'auto'
+                  }}
+                />
+              </div>
               <div className="flex justify-center mb-4">
-                <button className="flex items-center justify-center bg-blue-600 text-white font-semibold px-4 py-2 rounded-md mr-2 hover:bg-blue-700 shadow-lg">
+                <button className="flex items-center justify-center bg-blue-600 text-white font-semibold px-4 py-2 rounded-md mr-2 hover:bg-blue-700 shadow-lg"
+                  onClick={handleRunCode} type="button"
+                >
                   <FiPlay className="mr-2" />
                   Run
                 </button>

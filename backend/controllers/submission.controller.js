@@ -2,6 +2,8 @@ import Submission from "../models/submission.model.js";
 import createError from "../utils/createError.js";
 import { generateFile } from "../generateFile.js";
 import { executeCpp } from "../executeCpp.js";
+import { executeJava } from "../executeJava.js";
+import { executePython } from "../executePython.js";
 
 export const getAllSubmission = async (req, res, next) => {
     try{
@@ -30,11 +32,32 @@ export const runCode = async (req, res, next) => {
     if(code === undefined || code === '') {
         res.status(400).json({ message: "Code is required" });
     };
+    
+    if (
+        language !== "cpp" &&
+        language !== "py" &&
+        language !== "java"
+    ){
+        return res.status(400).json({ error: "Unsupported code language" });
+    }
 
     try{
         const filePath= generateFile(code, language);
-        const output = await executeCpp( filePath );
-        res.status(200).json({ filePath, output });
+        if(language === 'cpp'){
+            console.log('cpp');
+            const output = await executeCpp( filePath );
+            res.status(200).json({ filePath, output });
+
+        }else if(language === 'java'){
+            console.log('java');
+            const output = await executeJava( filePath );
+            res.status(200).json({ filePath, output });
+
+        }else if(language === 'py'){
+            console.log('py');
+            const output = await executePython( filePath );
+            res.status(200).json({ filePath, output });
+        }
     }
     catch(error){
         next(error);

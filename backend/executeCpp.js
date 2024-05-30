@@ -1,5 +1,5 @@
 import fs from 'fs';
-import path, { resolve } from 'path';
+import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { exec } from 'child_process';
@@ -19,6 +19,7 @@ const executeCpp = (filePath) => {
     // Get the file name without the extension
     const uniqueName = path.basename(filePath.split('.')[0]); 
 
+    // Create the output file name by appending .txt to the unique name
     const outputFileName= `${uniqueName}.txt`;
 
     // Create the output file path by joining the output directory and the unique name
