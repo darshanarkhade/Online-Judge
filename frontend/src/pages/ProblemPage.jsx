@@ -20,12 +20,12 @@ export default function Problem() {
   useEffect(() => {
     // Set initial code based on selected language
     if (selectedLanguage === "cpp") {
-      setCode(`// Include the input/output stream library\n#include <iostream>\n\n// Define the main function\nint main() {\n    // Output "Hello World!" to the console\n    std::cout << "Hello World!";\n\n    // Return 0 to indicate successful execution\n    return 0;\n}`);
+      setCode(`// Include the input/output stream library\n#include <iostream>\n\n// Define the main function\nint main() {\n    // Output "Hello CPP!" to the console\n    std::cout << "Hello CPP!";\n\n    // Return 0 to indicate successful execution\n    return 0;\n}`);
     } else if (selectedLanguage === "py") {
-      setCode(`# Define the main function\ndef main():\n    # Output "Hello World!" to the console\n    print("Hello World!")\n\n# Call the main function\nif __name__ == "__main__":\n    main()`);
+      setCode(`# Define the main function\ndef main():\n    # Output "Hello Python!" to the console\n    print("Hello Python!")\n\n# Call the main function\nif __name__ == "__main__":\n    main()`);
     } else if (selectedLanguage === "java") {
-      setCode(`// Define the class\npublic class Main {\n    // Define the main method\n    public static void main(String[] args) {\n        // Output "Hello World!" to the console\n        System.out.println("Hello World!");\n    }\n}`);
-    }
+      setCode(`class Main{\n    public static void main(String args[]){\n        System.out.println("Hello Java");\n    }\n}`);
+    }   
   }, [selectedLanguage]);
   
 

@@ -44,17 +44,17 @@ export const runCode = async (req, res, next) => {
     try{
         const filePath= generateFile(code, language);
         if(language === 'cpp'){
-            console.log('cpp');
+            // console.log('cpp');
             const output = await executeCpp( filePath );
             res.status(200).json({ filePath, output });
 
         }else if(language === 'java'){
-            console.log('java');
+            // console.log('java');
             const output = await executeJava( filePath );
             res.status(200).json({ filePath, output });
 
         }else if(language === 'py'){
-            console.log('py');
+            // console.log('py');
             const output = await executePython( filePath );
             res.status(200).json({ filePath, output });
         }

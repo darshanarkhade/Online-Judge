@@ -1,7 +1,7 @@
 # Define the main function
 def main():
-    # Output "Hello World!" to the console
-    print("Hello World!")
+    # Output "Hello Python!" to the console
+    print("Hello Python!")
 
 # Call the main function
 if __name__ == "__main__":

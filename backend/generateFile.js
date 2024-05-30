@@ -21,6 +21,19 @@ if(!fs.existsSync(dirCodes)) {
 }
 
 const generateFile = (code, language) => {
+
+    if(language=='java'){
+        const className = code.match(/class\s+(\w+)/);
+        if (!className) {
+            throw new Error('Class name not found in the code');
+        }
+        const uniqueName = className[1];
+        // console.log(uniqueName);
+        const fileName = `${uniqueName}.java`;
+        const filePath = path.join(dirCodes, fileName);
+        fs.writeFileSync(filePath, code);
+        return filePath;
+    }
     // Generate a unique name for the file using uuidv4() and append the language extension
     const uniqueName = uuidv4();
     // Create the file name by joining the unique name and the language extension
