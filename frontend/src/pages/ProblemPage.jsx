@@ -2,12 +2,11 @@ import React, { useState, useEffect } from "react";
 import { FiPlay, FiUpload } from "react-icons/fi";
 import { useParams } from "react-router-dom";
 import newRequest from "../utils/newRequest";
-import Editor from 'react-simple-code-editor';
-import { highlight, languages } from 'prismjs/components/prism-core';
-import 'prismjs/components/prism-clike';
-import 'prismjs/components/prism-javascript';
-import 'prismjs/themes/prism.css';
 
+import AceEditor from "react-ace";
+import "ace-builds/src-noconflict/mode-java";
+import "ace-builds/src-noconflict/theme-xcode";
+import "ace-builds/src-noconflict/ext-language_tools";
 
 export default function Problem() {
   const { id } = useParams();
@@ -18,9 +17,10 @@ export default function Problem() {
   const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
+    // console.log("in useEffect for selectedLanguage");
     // Set initial code based on selected language
     if (selectedLanguage === "cpp") {
-      setCode(`// Include the input/output stream library\n#include <iostream>\n\n// Define the main function\nint main() {\n    // Output "Hello CPP!" to the console\n    std::cout << "Hello CPP!";\n\n    // Return 0 to indicate successful execution\n    return 0;\n}`);
+      setCode(`// Include the input/output stream library\n#include <iostream>\nusing namespace std;\n\n// Define the main function\nint main() {\n    // Output "Hello CPP!" to the console\n    cout << "Hello CPP!";\n\n    // Return 0 to indicate successful execution\n    return 0;\n}`);
     } else if (selectedLanguage === "py") {
       setCode(`# Define the main function\ndef main():\n    # Output "Hello Python!" to the console\n    print("Hello Python!")\n\n# Call the main function\nif __name__ == "__main__":\n    main()`);
     } else if (selectedLanguage === "java") {
@@ -50,14 +50,27 @@ export default function Problem() {
 
   const handleRunCode = async () => {
     try {
+      // console.log(inputValue);
+      // console.log(code);
       const response = await newRequest.post("/run", {
         code,
+        input: inputValue,
         language: selectedLanguage,
       });
+      // console.log("Response from /run: ", response);
       setOutput(response.data.output);
     } catch (err) {
+      if(err.response.data===undefined){
+        setOutput("Error running code");
+      }
+      // console.log(err.response.data);
+      // console.log(err.response.data.message);
+      setOutput(err.response.data.message);
       console.error("Error running code:", err);
     }
+  }
+  const onChange = (newValue) => {
+    setCode(newValue);
   }
 
   return (
@@ -92,7 +105,7 @@ export default function Problem() {
             </div>
           </div>
 
-          <div className="border-l-2 border-gray-300 md:pl-4 md:ml-4"></div>
+          <div className="border-l-2 border-gray-300 md:pl-4 "></div>
 
           <div className="md:w-1/2 pl-4">
             <form onSubmit={handleSubmit} className="mb-6">
@@ -103,26 +116,23 @@ export default function Problem() {
                   value={selectedLanguage}
                   onChange={(e) => setSelectedLanguage(e.target.value)}
                 >
+                  console.log(selectedLanguage);
                   <option value="cpp">C++</option>
                   <option value="py">Python</option>
                   <option value="java">Java</option>
                 </select>
               </div>
-              <div className="bg-gray-100 shadow-md w-full max-w-lg mb-4" style={{ height: '380px', overflowY: 'auto' }}>
-                <Editor
+              <div className="w-full ">
+                <AceEditor
+                  mode="java"
+                  theme="xcode"
                   value={code}
-                  onValueChange={code => setCode(code)}
-                  highlight={code => highlight(code, languages.js)}
-                  padding={10}
-                  style={{
-                    fontFamily: '"Fira code", "Fira Mono", monospace',
-                    fontSize: 12,
-                    outline: 'none',
-                    border: 'none',
-                    backgroundColor: '#f7fafc',
-                    height: '100%',
-                    overflowY: 'auto'
-                  }}
+                  fontSize={14}
+                  onChange={onChange}
+                  name="UNIQUE_ID_OF_DIV"
+                  editorProps={{ $blockScrolling: true }}
+                  width="100%"
+                  height="400px"
                 />
               </div>
               <div className="flex justify-center mb-4">

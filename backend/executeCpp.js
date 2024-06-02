@@ -15,7 +15,7 @@ if(!fs.existsSync(outputPath)) {
     fs.mkdirSync(outputPath, { recursive: true });
 }
 
-const executeCpp = (filePath) => {
+const executeCpp = (filePath, inputPath) => {
     // Get the file name without the extension
     const uniqueName = path.basename(filePath.split('.')[0]); 
 
@@ -33,7 +33,7 @@ const executeCpp = (filePath) => {
             // using cd and execute the compiled file with &&. The callback function is called after 
             // command execution
 
-        exec(`g++ ${filePath} -o ${outputFilePath} && cd ${outputPath} && .\\${outputFileName} `, (error, stdout, stderr) => {
+        exec(`g++ ${filePath} -o ${outputFilePath} && cd ${outputPath} && .\\${outputFileName} < ${inputPath}`, (error, stdout, stderr) => {
             // If there is an error or stderr, reject the promise
             if (error) {
                 reject(error);

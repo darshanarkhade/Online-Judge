@@ -4,23 +4,35 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { v4 as uuidv4 } from 'uuid';
 
-// Get the directory path where the current module is located, for es6 modules use fileURLToPath() and dirname()
+// Get the directory path where the current module is located
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// dirCodes- Path to the directory where the codes will be stored
-// __dirname is the directory where the current file is located, in this case, it is the backend directory
-// codes is the directory where the codes will be stored
-// path.join() is used to join the __dirname and codes directory
+// Directory paths for storing code and input files
 const dirCodes = path.join(__dirname, "codes");
+const dirInputs = path.join(__dirname, "inputs");
 
-// // Check if the directory exists, if not, create the directory
+// Check if the directories exist, if not, create them
 if(!fs.existsSync(dirCodes)) {
-    //recursive: true is used to create the directory and its parent directories if they do not exist
     fs.mkdirSync(dirCodes, { recursive: true });
 }
 
-const generateFile = (code, language) => {
+if(!fs.existsSync(dirInputs)) {
+    fs.mkdirSync(dirInputs, { recursive: true });
+}
+
+const generateFile = (code, language, isInput = false) => {
+
+    
+    if(isInput){
+        // here code is input
+        const uniqueName = uuidv4();
+        const fileName = `${uniqueName}.txt`;
+        const filePath = path.join(dirInputs, fileName);
+        fs.writeFileSync(filePath, code);
+        return filePath;
+    }
+    
 
     if(language=='java'){
         const className = code.match(/class\s+(\w+)/);

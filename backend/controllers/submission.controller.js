@@ -4,7 +4,7 @@ import { generateFile } from "../generateFile.js";
 import { executeCpp } from "../executeCpp.js";
 import { executeJava } from "../executeJava.js";
 import { executePython } from "../executePython.js";
-
+ 
 export const getAllSubmission = async (req, res, next) => {
     try{
         const submissions = await Submission.find();
@@ -28,7 +28,7 @@ export const submitSolution = async (req, res, next) => {
 }
  
 export const runCode = async (req, res, next) => {
-    const { code, language='cpp' } = req.body;
+    const { code,input,  language='cpp' } = req.body;
     if(code === undefined || code === '') {
         res.status(400).json({ message: "Code is required" });
     };
@@ -42,20 +42,21 @@ export const runCode = async (req, res, next) => {
     }
 
     try{
-        const filePath= generateFile(code, language);
+        const filePath = generateFile(code, language);
+        const inputFilePath = generateFile(input, null, true); 
         if(language === 'cpp'){
             // console.log('cpp');
-            const output = await executeCpp( filePath );
+            const output = await executeCpp( filePath , inputFilePath );
             res.status(200).json({ filePath, output });
 
         }else if(language === 'java'){
             // console.log('java');
-            const output = await executeJava( filePath );
+            const output = await executeJava( filePath, inputFilePath );
             res.status(200).json({ filePath, output });
 
         }else if(language === 'py'){
             // console.log('py');
-            const output = await executePython( filePath );
+            const output = await executePython( filePath , inputFilePath );
             res.status(200).json({ filePath, output });
         }
     }

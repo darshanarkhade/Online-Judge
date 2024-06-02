@@ -37,13 +37,14 @@ export const login = async (req, res, next) => {
         isAdmin: user.isAdmin,
       },
       process.env.SECRET_KEY,
-      // { expiresIn: "1h" }
+      { expiresIn: "1d" }
     );
 
     const { password, ...info } = user._doc;
     res
       .cookie("accessToken", token, {
         httpOnly: true,
+        maxAge: 3600000,
       })
       .status(200)
       .send(info);

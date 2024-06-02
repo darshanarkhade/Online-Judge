@@ -1,8 +1,8 @@
 import { exec } from 'child_process';
 
-const executePython = (filePath) => {
+const executePython = (filePath, inputPath) => {
     return new Promise((resolve, reject) => {
-        exec(`python ${filePath}`, (error, stdout, stderr) => {
+        exec(`< ${inputPath} python ${filePath}`, (error, stdout, stderr) => {
             if (error) {
                 reject(error);
             } else if (stderr) {

@@ -7,7 +7,7 @@ export const isAdmin = (req, res, next) => {
   if (!token) {
     return res.status(401).json({ message: "Auth token is missing" });
   }
-
+  
   try {
     const decodedToken = jwt.verify(token, process.env.SECRET_KEY); 
     if (!decodedToken.isAdmin) {

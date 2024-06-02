@@ -7,7 +7,7 @@ export default function Submission() {
     {
       name: "Problem 1",
       language: "C++",
-      time: "Easy",
+      time: Date.now(),
       code: `#include<stdio.h>
           int main() {
           printf("Hello, World!");
