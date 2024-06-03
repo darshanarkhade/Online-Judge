@@ -20,7 +20,7 @@ const executeCpp = (filePath, inputPath) => {
     const uniqueName = path.basename(filePath.split('.')[0]); 
 
     // Create the output file name by appending .txt to the unique name
-    const outputFileName= `${uniqueName}.txt`;
+    const outputFileName= `${uniqueName}.out`;
 
     // Create the output file path by joining the output directory and the unique name
     const outputFilePath = path.join(outputPath, outputFileName);
@@ -33,7 +33,7 @@ const executeCpp = (filePath, inputPath) => {
             // using cd and execute the compiled file with &&. The callback function is called after 
             // command execution
 
-        exec(`g++ ${filePath} -o ${outputFilePath} && cd ${outputPath} && .\\${outputFileName} < ${inputPath}`, (error, stdout, stderr) => {
+        exec(`g++ ${filePath} -o ${outputFilePath} && cd ${outputPath} && ./${outputFileName} < ${inputPath}`, (error, stdout, stderr) => {
             // If there is an error or stderr, reject the promise
             if (error) {
                 reject(error);

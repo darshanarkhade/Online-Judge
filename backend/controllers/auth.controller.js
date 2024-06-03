@@ -1,5 +1,5 @@
 import User from "../models/user.model.js";
-import bcrypt from "bcrypt";
+import bcrypt from 'bcryptjs';
 import jwt from "jsonwebtoken";
 import createError from "../utils/createError.js";
 
@@ -44,7 +44,7 @@ export const login = async (req, res, next) => {
     res
       .cookie("accessToken", token, {
         httpOnly: true,
-        maxAge: 3600000,
+        maxAge:24*3600000,
       })
       .status(200)
       .send(info);

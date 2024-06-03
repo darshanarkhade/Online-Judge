@@ -4,6 +4,7 @@ import { generateFile } from "../generateFile.js";
 import { executeCpp } from "../executeCpp.js";
 import { executeJava } from "../executeJava.js";
 import { executePython } from "../executePython.js";
+import { generateInputFile } from "../generateInputFile.js";
  
 export const getAllSubmission = async (req, res, next) => {
     try{
@@ -28,7 +29,7 @@ export const submitSolution = async (req, res, next) => {
 }
  
 export const runCode = async (req, res, next) => {
-    const { code,input,  language='cpp' } = req.body;
+    const { code , input,  language='cpp' } = req.body;
     if(code === undefined || code === '') {
         res.status(400).json({ message: "Code is required" });
     };
@@ -43,7 +44,7 @@ export const runCode = async (req, res, next) => {
 
     try{
         const filePath = generateFile(code, language);
-        const inputFilePath = generateFile(input, null, true); 
+        const inputFilePath = generateInputFile(input); 
         if(language === 'cpp'){
             // console.log('cpp');
             const output = await executeCpp( filePath , inputFilePath );
@@ -60,7 +61,7 @@ export const runCode = async (req, res, next) => {
             res.status(200).json({ filePath, output });
         }
     }
-    catch(error){
+    catch(error){ 
         next(error);
     }
 }

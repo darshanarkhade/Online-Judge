@@ -22,6 +22,11 @@ const executeJava = (filePath, inputPath ) => {
     // console.log(outputFilePath); 
     return new Promise((resolve, reject) => {
         // console.log(`javac -d ${outputPath} ${filePath} && java -cp ${outputPath} ${uniqueName}`);
+        // explain the commandstep by step
+        // javac -d ${outputPath} ${filePath} : compile the java file and store the class file in the
+        // specified directory -d ${outputPath}
+        // java -cp ${outputPath} ${uniqueName} : run the class file with the specified 
+        // classpath -cp ${outputPath} and the class name ${uniqueName}
         exec(`javac -d ${outputPath} ${filePath} && java -cp ${outputPath} ${uniqueName} < ${inputPath}`, (error, stdout, stderr) => {
             if (error) {
                 reject(error);

@@ -8,31 +8,15 @@ import { v4 as uuidv4 } from 'uuid';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Directory paths for storing code and input files
+// Directory paths for storing code files
 const dirCodes = path.join(__dirname, "codes");
-const dirInputs = path.join(__dirname, "inputs");
 
 // Check if the directories exist, if not, create them
 if(!fs.existsSync(dirCodes)) {
     fs.mkdirSync(dirCodes, { recursive: true });
 }
 
-if(!fs.existsSync(dirInputs)) {
-    fs.mkdirSync(dirInputs, { recursive: true });
-}
-
-const generateFile = (code, language, isInput = false) => {
-
-    
-    if(isInput){
-        // here code is input
-        const uniqueName = uuidv4();
-        const fileName = `${uniqueName}.txt`;
-        const filePath = path.join(dirInputs, fileName);
-        fs.writeFileSync(filePath, code);
-        return filePath;
-    }
-    
+const generateFile = (code, language) => {
 
     if(language=='java'){
         const className = code.match(/class\s+(\w+)/);

@@ -36,6 +36,10 @@ const connect = async () => {
   }
 };
 
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
 // Routes
 app.use("/api", authRoute);
 app.use("/api", problemRoute);
@@ -50,7 +54,7 @@ app.use((err, req, res, next) => {
   const errorMessage = err.message || "Something went wrong!";
   return res.status(errorStatus).json({ message: errorMessage });
 });
-
+ 
 // Start server
 app.listen(PORT, () => {
   connect();
