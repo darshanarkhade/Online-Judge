@@ -26,6 +26,18 @@ export const getProblemDetails = async (req, res) => {
     }
 }
 
+export const getProblemById = async (req, res) => {
+    try {
+        const problem = await Problem.findById(req.params.id);
+        if (!problem) {
+            throw createError(404, "Problem not found");
+        }
+        res.status(200).json(problem);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const addProblem = async (req, res) => {
     try {
         // console.log("in addProblem");

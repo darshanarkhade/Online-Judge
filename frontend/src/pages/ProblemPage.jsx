@@ -15,6 +15,7 @@ export default function Problem() {
   const [code, setCode] = useState("");
   const [output, setOutput] = useState("");
   const [inputValue, setInputValue] = useState("");
+  const [verdict, setVerdict] = useState("");
 
   useEffect(() => {
     // console.log("in useEffect for selectedLanguage");
@@ -42,12 +43,28 @@ export default function Problem() {
     fetchProblem();
   }, [id]);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Implement logic to process code and generate output
-    setOutput("Sample output goes here...");
-  };
+    try {
+      const response = await newRequest.post("/submit", {
+        code,
+        language: selectedLanguage,
+        problemId: problem._id,
+      });
+      console.log("Response from /submit: ", response);
+      // Check the verdict in the response data and update the output accordingly
+      if (response.data === "Accepted") {
+        setVerdict("Submission accepted");
+      } else {
+        setVerdict("Submission rejected: " + response.data);
+      }
+    } catch (err) {
+      setVerdict("Error submitting code- "+ err.response.data.message  );
+      console.error("Error submitting code:", err);
+    }
+}
 
+  
   const handleRunCode = async () => {
     try {
       // console.log(inputValue);
@@ -169,6 +186,11 @@ export default function Problem() {
                   readOnly
                 ></textarea>
               </div>
+              
+            </div>
+            <div className="mt-4">
+              <h2 className="text-xl font-semibold mb-2 text-blue-700">Verdict:</h2>
+              <p className="border border-gray-300 rounded-md p-2 bg-gray-50 text-gray-800">{verdict}</p>
             </div>
           </div>
         </div>

@@ -33,7 +33,7 @@ const executeJava = (filePath, inputPath ) => {
             } else if (stderr) {
                 reject(stderr);
             } else {
-                resolve(stdout);
+                resolve(stdout.trim());
             }
         });
     });

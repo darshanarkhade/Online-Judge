@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
+import shortid from "shortid";
 
 const submissionSchema = new Schema({
   submissionId: {
-    type: Number,
-    required: [true, "Please enter the submission ID"],
+    type: String,
+    default: shortid.generate,
     unique: true,
   },
   problemId: {
@@ -40,7 +41,7 @@ const submissionSchema = new Schema({
     type: String,
     required: [true, "Please enter the submission language"],
     enum: {
-      values: ["C", "C++", "Java", "Python"],
+      values: ["cpp", "java", "py"],
       message: "Language should be either C, C++, Java, or Python",
     },
   },

@@ -5,10 +5,11 @@ import { executeCpp } from "../executeCpp.js";
 import { executeJava } from "../executeJava.js";
 import { executePython } from "../executePython.js";
 import { generateInputFile } from "../generateInputFile.js";
+import TestCases from "../models/testcases.model.js";
  
 export const getAllSubmission = async (req, res, next) => {
     try{
-        const submissions = await Submission.find();
+        const submissions = await Submission.find().sort({ submissionTime: -1 });
         if (!submissions || submissions.length === 0) {
             throw createError(404, "No problems found");
         }
@@ -21,7 +22,60 @@ export const getAllSubmission = async (req, res, next) => {
 
 export const submitSolution = async (req, res, next) => {
     try{
+        const { code ,language='cpp', problemId } = req.body;
+        // console.log(code, language, problemId)
+        if(code === undefined || code === '') {
+            res.status(400).json({ message: "Code is required" });
+        };
+        if (
+            language !== "cpp" &&
+            language !== "py" &&
+            language !== "java"
+        ){
+            return res.status(400).json({ error: "Unsupported code language" });
+        }
+        console.log('problemId', problemId);
 
+        const filePath = generateFile(code, language);
+        let verdict = "Accepted";
+        const testCases = await TestCases.find({ problemId: problemId });
+        // console.log('testCases', testCases);
+        for(const testCase of testCases){
+            const inputFilePath = generateInputFile(testCase.input);
+            let output = '';
+            // console.log('testCase', testCase);
+            if(language === 'cpp'){
+                output = await executeCpp( filePath , inputFilePath );
+                console.log('output', output);
+            }else if(language === 'java'){
+                output = await executeJava( filePath, inputFilePath );
+            }else if(language === 'py'){
+                output = await executePython( filePath , inputFilePath );
+            }
+            if(output !== testCase.output){
+                verdict = "Wrong Answer";
+                break;
+            }
+        }
+        console.log('verdict', verdict);    
+        // console.log(problemId,code, verdict, language, Date.now());
+        // // console.log(req);
+        // console.log('submission', problemId, req.username, code, verdict, language, Date.now());
+        
+        const newSubmission = new Submission({
+            problemId: problemId,
+            userId: req.username,
+            submissionCode: code,
+            verdict: verdict,
+            language: language,
+            submissionTime: Date.now(),
+        });
+        // console.log('newSubmission', newSubmission);
+        // console.log('before save')
+        await newSubmission.save();
+        // console.log('after save')
+        // console.log('submission', newSubmission);
+        res.status(200).json(verdict);    
     }
     catch(error){
         next(error);

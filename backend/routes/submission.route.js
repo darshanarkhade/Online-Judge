@@ -4,9 +4,9 @@ import { verifyToken } from "../middleware/jwt.js";
 
 const router = express.Router();
 
-router.get("/submissions", verifyToken, getAllSubmission);
+router.get("/submissions", getAllSubmission);
 router.post("/submit", verifyToken, submitSolution);
  
-router.post("/run", verifyToken, runCode);
+router.post("/run", runCode);
 
 export default router;

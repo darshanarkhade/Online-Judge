@@ -1,11 +1,12 @@
 import express from "express";
-import { getAllProblems, getProblemDetails, addProblem ,addTestCases,deleteProblem,deleteTestCase, updateProblem, getTestCases, updateTestCase, addTestCase, deleteTestCasesOfProblem } from '../controllers/problem.controller.js';
+import { getAllProblems, getProblemDetails,getProblemById, addProblem ,addTestCases,deleteProblem,deleteTestCase, updateProblem, getTestCases, updateTestCase, addTestCase, deleteTestCasesOfProblem } from '../controllers/problem.controller.js';
 import {isAdmin} from '../middleware/isAdmin.js';
 
 const router = express.Router();
 
 router.get('/problems', getAllProblems);
 router.get('/problems/:id', getProblemDetails);
+router.get('/problem/:id', getProblemById);
  
 // Admin route
 router.post('/addProblem', isAdmin, addProblem);
