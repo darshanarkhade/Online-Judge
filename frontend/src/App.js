@@ -13,6 +13,7 @@ import AddTestCases from "./pages/AddTestCases";
 import AllProblems from "./pages/AllProblems";
 import UpdateProblem from "./pages/UpdateProblem";
 import UpdateTestCases from "./pages/UpdateTestCases";
+import Loading from "./components/Loading";
 
 function App() {
   const Layout = () => {
@@ -82,7 +83,7 @@ function App() {
     },
   ]);
 
-  return <RouterProvider router={router} />;
+  return <RouterProvider router={router} loading={<Loading />} />;
 }
 
 export default App;

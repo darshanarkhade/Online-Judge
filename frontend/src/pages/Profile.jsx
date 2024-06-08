@@ -2,17 +2,21 @@ import React, { useEffect } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { useState } from "react";
 import newRequest from "../utils/newRequest";
+import Loading from "../components/Loading";
 
 export default function Profile() {
 
   const [user , setUser] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(()=>{
     const fetchUser = async () => {
       try {
         const response = await newRequest.get(`/profile`);
         setUser(response.data);
+        setIsLoading(false);
       } catch (err) {
+        setIsLoading(false);
         console.error("Error fetching user:", err);
       }
     }
@@ -38,6 +42,10 @@ export default function Profile() {
 
   );
   return (
+    <>
+    {isLoading ? (
+          <Loading /> 
+        ) : (
     <div className="max-w-md  my-10 mx-auto bg-white shadow-md rounded-lg overflow-hidden">
       <div className="flex bg-blue-200 items-center justify-center p-6">
         <FaUserCircle className="text-6xl text-gray-500" />
@@ -53,5 +61,7 @@ export default function Profile() {
         
       </div>
     </div>
+    )}
+    </>
   );
 }

@@ -4,7 +4,7 @@ import { nord } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 export default function CodeDetails({ code, onClose }) {
   return (
-    <div className="fixed inset-20  flex items-center justify-center bg-gray-200 dark:bg-gray-800 p-10">
+    <div className="fixed inset-20 flex items-center justify-center bg-gray-200 dark:bg-gray-800 p-10">
       <div className="fixed inset-20 w-70% max-h-80vh overflow-y-auto bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700">
         <div className="p-7">
           <SyntaxHighlighter language="c++" style={nord} showLineNumbers wrapLines>

@@ -6,19 +6,6 @@ import { executeJava } from "../executeJava.js";
 import { executePython } from "../executePython.js";
 import { generateInputFile } from "../generateInputFile.js";
 import TestCases from "../models/testcases.model.js";
- 
-export const getAllSubmission = async (req, res, next) => {
-    try{
-        const submissions = await Submission.find().sort({ submissionTime: -1 });
-        if (!submissions || submissions.length === 0) {
-            throw createError(404, "No problems found");
-        }
-        res.status(200).json(submissions);
-    }
-    catch(error){
-        next(error);
-    }
-}
 
 export const submitSolution = async (req, res, next) => {
     try{
@@ -119,3 +106,49 @@ export const runCode = async (req, res, next) => {
         next(error);
     }
 }
+
+ 
+export const getAllSubmission = async (req, res, next) => {
+    try{
+        const submissions = await Submission.find().sort({ submissionTime: -1 });
+        if (!submissions || submissions.length === 0) {
+            throw createError(404, "No problems found");
+        }
+        res.status(200).json(submissions);
+    }
+    catch(error){
+        next(error);
+    }
+}
+
+export const getSubmissionsByProblemId = async (req, res, next) => {
+    try {
+      const { problemId } = req.body;
+      if (!problemId) {
+        throw createError(400, "Problem ID is required");
+      }
+      const submissions = await Submission.find({ problemId: problemId }).sort({ submissionTime: -1 }).limit(10);
+      if (!submissions || submissions.length === 0) {
+        throw createError(404, "No submissions found");
+      }
+      res.status(200).json(submissions);
+    } catch (error) {
+      next(error);
+    }
+  };
+  
+
+export const getSubmissionByUserId = async (req, res, next) => {
+    try{
+        const { userId } = req.body;
+        const submissions = await Submission.find({ userId: userId }).sort({ submissionTime: -1 });
+        if (!submissions || submissions.length === 0) {
+            throw createError(404, "No submissions found");
+        }
+        res.status(200).json(submissions);
+    }
+    catch(error){
+        next(error);
+    }
+}
+

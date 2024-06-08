@@ -8,6 +8,12 @@ import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/theme-xcode";
 import "ace-builds/src-noconflict/ext-language_tools";
 
+import { FiBook, FiCode, FiClipboard } from "react-icons/fi";
+import { FiEdit, FiMonitor, FiCheckCircle } from "react-icons/fi";
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { nord } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import Description from "../components/Description";
+
 export default function Problem() {
   const { id } = useParams();
   const [problem, setProblem] = useState(null);
@@ -16,7 +22,14 @@ export default function Problem() {
   const [output, setOutput] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [verdict, setVerdict] = useState("");
+  const [selectedOption, setSelectedOption] = useState("description");
+  const [selectedSection, setSelectedSection] = useState("input");
+  const [submissions, setSubmissions] = useState([]);
+  const [submissionCount, setSubmissionCount] = useState(0);
 
+
+
+  
   useEffect(() => {
     // console.log("in useEffect for selectedLanguage");
     // Set initial code based on selected language
@@ -34,14 +47,42 @@ export default function Problem() {
     const fetchProblem = async () => {
       try {
         const response = await newRequest.get(`/problems/${id}`);
-        setProblem(response.data);
+        setProblem(response.data);                                      
       } catch (err) {
         console.error("Error fetching problem:", err);
       }
     };
-
+  
     fetchProblem();
   }, [id]);
+  
+  useEffect(() => {
+    const fetchSubmissions = async () => {
+      if (problem && problem._id) {
+        try {
+        
+          const response = await newRequest.post("/getSubmissionsByProblemId", {
+            problemId: problem._id
+          });
+          const submissionsWithNames = await Promise.all(
+            response.data.map(async (submission) => {
+              const userResponse = await newRequest.get(`/users/${submission.userId}`);
+              return {
+                ...submission,
+                userName: userResponse.data.username,
+              };
+            })
+          );
+          setSubmissions(submissionsWithNames);
+        } catch (err) {
+          console.error("Error fetching submissions:", err);
+        }
+      }
+    };
+
+    fetchSubmissions();
+  }, [problem, submissionCount]);
+  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -51,6 +92,8 @@ export default function Problem() {
         language: selectedLanguage,
         problemId: problem._id,
       });
+      setSubmissionCount(prevCount => prevCount += 1);
+
       console.log("Response from /submit: ", response);
       // Check the verdict in the response data and update the output accordingly
       if (response.data === "Accepted") {
@@ -89,40 +132,127 @@ export default function Problem() {
   const onChange = (newValue) => {
     setCode(newValue);
   }
+  
+  const handleOptionChange = (option) => {
+    setSelectedOption(option);
+  }
+
+  const handleSectionChange = (section) => {
+    setSelectedSection(section);
+  }
+
+  function formatDate(dateString) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric'};
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', options);
+  }
 
   return (
     <div className="container mx-auto px-4 py-4">
       {problem && (
         <div className="flex flex-col md:flex-row bg-white shadow-2xl rounded-lg p-6 border border-gray-300">
           <div className="md:w-1/2 pr-4 mb-6 md:mb-0">
-            <div className="text-left">
-              <h1 className="text-4xl font-extrabold mb-6 text-blue-700">{problem.problemTitle}</h1>
-              <div className="text-sm text-gray-600 mb-6">
-                <h2 className="text-sm font-semibold mb-2">Memory Limit: {problem.memoryLimit} megabytes</h2>
-                <h2 className="text-sm font-semibold mb-2">Time Limit: {problem.timeLimit} seconds</h2>
-                {/* <p className="mb-2">Input: Standard Input</p>
-                <p className="mb-2">Output: Standard Output</p> */}
-              </div>
+            <div className="flex justify-between items-center mb-4">
+              <button 
+                className={`flex items-center font-semibold text-blue-700 relative px-4 py-2 
+                            ${selectedOption === 'description' ? 'bg-blue-100' : ''}
+                            ${selectedOption === 'description' ? 'border-b-4 border-blue-500' : ''}
+                          `}
+                onClick={() => handleOptionChange('description')}
+              >
+                <FiBook className="mr-2" />
+                <span>Description</span>
+              </button>
+              <button 
+                className={`flex items-center font-semibold text-blue-700 relative px-4 py-2  
+                            ${selectedOption === 'solution' ? 'bg-blue-100' : ''}
+                            ${selectedOption === 'solution' ? 'border-b-4 border-blue-500' : ''}
+                          `}
+                onClick={() => handleOptionChange('solution')}
+              >
+                <FiCode className="mr-2" />
+                <span>Solution</span>
+              </button>
+              <button 
+                className={`flex items-center font-semibold text-blue-700 relative px-4 py-2 
+                            ${selectedOption === 'submissions' ? 'bg-blue-100' : ''}
+                            ${selectedOption === 'submissions' ? 'border-b-4 border-blue-500' : ''}
+                          `}
+                onClick={() => handleOptionChange('submissions')}
+              >
+                <FiClipboard className="mr-2" />
+                <span>Submissions</span>
+              </button>
             </div>
-            <h2 className="text-lg font-semibold mb-2 text-blue-700">Problem Difficulty: {problem.difficulty}</h2>
-            <h2 className="text-lg font-semibold mb-2 text-blue-700">Problem Description:</h2>
-            <p className="mb-6 text-gray-800">{problem.problemStatement}</p>
-            <div className="flex mb-6">
-              <div className="w-full pr-2">
-                <h2 className="text-xl font-semibold mb-2 text-blue-700">Example:</h2>
-                <div className="border border-gray-300 rounded-md p-2 mb-4 bg-gray-50 text-gray-800">
-                  <h3 className="text-lg font-semibold mb-2">Sample Input:</h3>
-                  <p>{problem.sampleInput}</p>
+
+
+
+            {selectedOption === 'description' && (
+              <Description  problem={problem} />
+            )}
+
+            {selectedOption === 'solution' && (
+              <>
+                {problem.solution ? (
+                  <>
+                    <h2 className="text-lg font-semibold mb-2 text-blue-700">Problem Solution:</h2>
+                    <SyntaxHighlighter language="cpp" style={nord} showLineNumbers wrapLines>
+                      {problem.solution}
+                    </SyntaxHighlighter>
+                  </>
+                ) : (
+                  <>
+                    <h2 className="text-lg font-semibold mb-2 text-blue-700">Solution:</h2>
+                    <p className="mb-6 text-gray-800">Solution not available</p>
+                  </>
+                )}
+              </>
+            )}
+
+
+
+            {selectedOption === 'submissions' && (
+              <>
+                <h2 className="text-lg font-semibold mb-2 text-blue-700">Submissions:</h2>
+                <div className="w-full overflow-x-auto">
+                  <table className="w-auto border border-gray-300">
+                      <thead>
+                        <tr className="bg-gray-100">
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Verdict</th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">When</th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Who</th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Language</th>
+                        </tr>
+                      </thead>
+                    <tbody>
+                      {submissions.map((submission) => (
+                        <tr key={submission._id} className={`border-b ${submission.verdict === 'Accepted' ? 'bg-green-100' : 'bg-red-100'}`}>
+                          <td className="px-6 py-4">
+                            <span className="text-sm font-semibold">{submission.verdict}</span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className="text-sm">{formatDate(submission.submissionTime)}</span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className="text-sm">{submission.userName}</span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className="text-sm">{submission.language}</span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-                <div className="border border-gray-300 rounded-md p-2 bg-gray-50 text-gray-800">
-                  <h3 className="text-lg font-semibold mb-2">Sample Output:</h3>
-                  <p>{problem.sampleOutput}</p>
-                </div>
-              </div>
-            </div>
+              </>
+            )}
+
+
+
+
           </div>
 
-          <div className="border-l-2 border-gray-300 md:pl-4 "></div>
+          <div className="border-l-2 border-gray-300 md:pl-4"></div>
 
           <div className="md:w-1/2 pl-4">
             <form onSubmit={handleSubmit} className="mb-6">
@@ -133,13 +263,12 @@ export default function Problem() {
                   value={selectedLanguage}
                   onChange={(e) => setSelectedLanguage(e.target.value)}
                 >
-                  console.log(selectedLanguage);
                   <option value="cpp">C++</option>
                   <option value="py">Python</option>
                   <option value="java">Java</option>
                 </select>
               </div>
-              <div className="w-full ">
+              <div className="w-full">
                 <AceEditor
                   mode="java"
                   theme="xcode"
@@ -150,6 +279,7 @@ export default function Problem() {
                   editorProps={{ $blockScrolling: true }}
                   width="100%"
                   height="400px"
+                  z-index="0"
                 />
               </div>
               <div className="flex justify-center mb-4">
@@ -165,33 +295,58 @@ export default function Problem() {
                 </button>
               </div>
             </form>
-            <div className="flex">
-              <div className="w-1/2 pr-2">
-                <h2 className="text-xl font-semibold mb-2 text-blue-700">Input:</h2>
-                <textarea
-                  className="w-full h-48 border border-gray-300 rounded-md px-4 py-2 mb-4 resize-none text-gray-800 bg-gray-50 shadow-inner"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  placeholder="Enter input here..."
-                  required
-                ></textarea>
-              </div>
-              <div className="w-1/2 pl-2">
-                <h2 className="text-xl font-semibold mb-2 text-blue-700">Output:</h2>
-                <textarea
-                  className="w-full h-48 border border-gray-300 rounded-md px-4 py-2 mb-4 resize-none text-gray-800 bg-gray-50 shadow-inner"
-                  value={output}
-                  onChange={(e) => setOutput(e.target.value)}
-                  placeholder="Output will be displayed here..."
-                  readOnly
-                ></textarea>
-              </div>
-              
+            <div className="flex justify-between items-center mb-4">
+              <button 
+                className={`flex items-center font-semibold text-blue-700 ${selectedSection === 'input' ? 'underline' : ''}`}
+                onClick={() => handleSectionChange('input')}
+              >
+                <FiEdit className="mr-1" />
+                <span>Input</span>
+              </button>
+              <button 
+                className={`flex items-center font-semibold text-blue-700 ${selectedSection === 'output' ? 'underline' : ''}`}
+                onClick={() => handleSectionChange('output')}
+              >
+                <FiMonitor className="mr-1" />
+                <span>Output</span>
+              </button>
+              <button 
+                className={`flex items-center font-semibold text-blue-700 ${selectedSection === 'verdict' ? 'underline' : ''}`}
+                onClick={() => handleSectionChange('verdict')}
+              >
+                <FiCheckCircle className="mr-1" />
+                <span>Verdict</span>
+              </button>
             </div>
-            <div className="mt-4">
-              <h2 className="text-xl font-semibold mb-2 text-blue-700">Verdict:</h2>
-              <p className="border border-gray-300 rounded-md p-2 bg-gray-50 text-gray-800">{verdict}</p>
-            </div>
+
+            {selectedSection === 'input' && (
+              <textarea
+                className="w-full min-h-40 border border-gray-300 rounded-md px-4 py-2 mb-4 resize-none text-gray-800 bg-gray-100 focus:outline-none focus:ring focus:border-blue-500"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                placeholder="Enter input here..."
+                required
+              ></textarea>
+            )}
+
+            {selectedSection === 'output' && (
+              <textarea
+                className="w-full min-h-40 border border-gray-300 rounded-md px-4 py-2 mb-4 resize-none text-gray-800 bg-gray-100 focus:outline-none focus:ring focus:border-blue-500"
+                value={output}
+                placeholder="Output will be displayed here..."
+                readOnly
+              ></textarea>
+            )}
+
+            {selectedSection === 'verdict' && (
+              <div className="flex min-h-40 items-center justify-center border border-gray-300 rounded-md p-4 bg-gray-100">
+                <span className={`font-semibold text-lg ${verdict === 'Accepted' ? 'text-green-600' : 'text-red-600'}`}>{verdict}</span>
+              </div>
+            )}
+
+
+
+
           </div>
         </div>
       )}

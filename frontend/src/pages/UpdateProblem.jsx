@@ -29,7 +29,8 @@ export default function AddProblem() {
           sampleInput: response.data.sampleInput,
           sampleOutput: response.data.sampleOutput,
           memoryLimit: response.data.memoryLimit,
-          timeLimit: response.data.timeLimit
+          timeLimit: response.data.timeLimit,
+          solution: response.data.solution
         });
       } catch (err) {
         console.error("Error fetching problem:", err);
@@ -98,6 +99,15 @@ export default function AddProblem() {
             className="bg-gray-200 text-gray-800 border border-gray-300 rounded-md p-2 mb-2 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
             name="problemStatement"
             value={formData.problemStatement}
+            onChange={handleChange}
+            rows="6"
+          />
+          <label className="text-gray-800 font-semibold mb-2">Solution</label>
+          <textarea
+            placeholder="Solution"
+            className="bg-gray-200 text-gray-800 border border-gray-300 rounded-md p-2 mb-2 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
+            name="solution"
+            value={formData.solution}
             onChange={handleChange}
             rows="6"
           />

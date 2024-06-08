@@ -40,6 +40,10 @@ const problemSchema = new Schema({
     type: Number,
     required: [true, "Please enter the time limit"],
   },
+  solution: {
+    type: String,
+    required: [true, "Please enter the solution"],
+  },
   
 
 //   if time permits, add tags to the problem schema

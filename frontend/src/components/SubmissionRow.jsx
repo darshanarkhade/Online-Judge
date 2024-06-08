@@ -18,7 +18,7 @@ export default function SubmissionRow({ number, name, language, time, code, verd
     return date.toLocaleDateString('en-US', options);
   }
   return (
-    <tr className="bg-white border-b hover:bg-gray-50">
+<tr className={`border-b ${verdict === 'Accepted' ? 'bg-green-100' : 'bg-red-100'}`}>
       <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
         {number}
       </th>
@@ -43,5 +43,6 @@ export default function SubmissionRow({ number, name, language, time, code, verd
       </td>
       {isCodeDetailsOpen && <CodeDetails code={code} onClose={handleClose} />}
     </tr>
+
   );
 }
