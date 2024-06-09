@@ -96,7 +96,7 @@ export default function AddProblem() {
           <label className="text-gray-800 font-semibold mb-2">Problem Statement</label>
           <textarea
             placeholder="Problem Statement"
-            className="bg-gray-200 text-gray-800 border border-gray-300 rounded-md p-2 mb-2 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
+            className="whitespace-pre-wrap bg-gray-200 text-gray-800 border border-gray-300 rounded-md p-2 mb-2 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
             name="problemStatement"
             value={formData.problemStatement}
             onChange={handleChange}
@@ -114,7 +114,7 @@ export default function AddProblem() {
           <label className="text-gray-800 font-semibold mb-2">Sample Input</label>
           <textarea
             placeholder="Sample Input"
-            className="bg-gray-200 text-gray-800 border border-gray-300 rounded-md p-2 mb-2 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
+            className="whitespace-pre-wrap bg-gray-200 text-gray-800 border border-gray-300 rounded-md p-2 mb-2 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
             name="sampleInput"
             value={formData.sampleInput}
             onChange={handleChange}
@@ -123,7 +123,7 @@ export default function AddProblem() {
           <label className="text-gray-800 font-semibold mb-2">Sample Output</label>
           <textarea
             placeholder="Sample Output"
-            className="bg-gray-200 text-gray-800 border border-gray-300 rounded-md p-2 mb-2 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
+            className="whitespace-pre-wrap bg-gray-200 text-gray-800 border border-gray-300 rounded-md p-2 mb-2 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
             name="sampleOutput"
             value={formData.sampleOutput}
             onChange={handleChange}

@@ -140,7 +140,7 @@ export default function UpdateTestCases() {
           type="submit"
           className="bg-green-500 text-white font-semibold py-2 px-4 m-2 rounded-md hover:bg-green-600"
         >
-          Update Test Cases
+          Add all New Test Cases
         </button>
       </form>
     </div>

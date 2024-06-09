@@ -72,7 +72,7 @@ export default function AddProblem() {
           <label className="text-gray-800 font-semibold mb-2">Problem Statement</label>
           <textarea
             placeholder="Problem Statement"
-            className="bg-gray-200 text-gray-800 border border-gray-300 rounded-md p-2 mb-2 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
+            className="bg-gray-200 whitespace-pre-wrap text-gray-800 border border-gray-300 rounded-md p-2 mb-2 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
             name="problemStatement"
             value={formData.problemStatement}
             onChange={handleChange}
@@ -87,8 +87,8 @@ export default function AddProblem() {
             onChange={handleChange}
             rows="6"
           />
-          <label className="text-gray-800 font-semibold mb-2">Sample Input</label>
-          <textarea
+          <label className="text-gray-800 font-semibold mb-2 whitespace-pre-wrap">Sample Input</label>
+          <input
             placeholder="Sample Input"
             className="bg-gray-200 text-gray-800 border border-gray-300 rounded-md p-2 mb-2 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
             name="sampleInput"
@@ -96,7 +96,7 @@ export default function AddProblem() {
             onChange={handleChange}
             rows="3"
           />
-          <label className="text-gray-800 font-semibold mb-2">Sample Output</label>
+          <label className="text-gray-800 font-semibold mb-2 whitespace-pre-wrap">Sample Output</label>
           <textarea
             placeholder="Sample Output"
             className="bg-gray-200 text-gray-800 border border-gray-300 rounded-md p-2 mb-2 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"

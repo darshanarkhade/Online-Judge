@@ -1,24 +1,23 @@
 import Submission from "../models/submission.model.js";
 import createError from "../utils/createError.js";
-import { generateFile } from "../generateFile.js";
-import { executeCpp } from "../executeCpp.js";
-import { executeJava } from "../executeJava.js";
-import { executePython } from "../executePython.js";
-import { generateInputFile } from "../generateInputFile.js";
+import { generateFile } from "../codeExecuter/generateFile.js";
+import { executeCpp } from "../codeExecuter/executeCpp.js";
+import { executeJava } from "../codeExecuter/executeJava.js";
+import { executePython } from "../codeExecuter/executePython.js";
+import { generateInputFile } from "../codeExecuter/generateInputFile.js";
 import TestCases from "../models/testcases.model.js";
 
 export const submitSolution = async (req, res, next) => {
-    try{
-        const { code ,language='cpp', problemId } = req.body;
-        // console.log(code, language, problemId)
-        if(code === undefined || code === '') {
-            res.status(400).json({ message: "Code is required" });
+    try {
+        const { code, language = 'cpp', problemId, timeLimit } = req.body; // Assuming timeLimit is passed in req.body
+        if (code === undefined || code === '') {
+            return res.status(400).json({ message: "Code is required" });
         };
         if (
             language !== "cpp" &&
             language !== "py" &&
             language !== "java"
-        ){
+        ) {
             return res.status(400).json({ error: "Unsupported code language" });
         }
         console.log('problemId', problemId);
@@ -26,29 +25,36 @@ export const submitSolution = async (req, res, next) => {
         const filePath = generateFile(code, language);
         let verdict = "Accepted";
         const testCases = await TestCases.find({ problemId: problemId });
-        // console.log('testCases', testCases);
-        for(const testCase of testCases){
+        let index = 0;
+        for (const testCase of testCases) {
             const inputFilePath = generateInputFile(testCase.input);
             let output = '';
-            // console.log('testCase', testCase);
-            if(language === 'cpp'){
-                output = await executeCpp( filePath , inputFilePath );
-                console.log('output', output);
-            }else if(language === 'java'){
-                output = await executeJava( filePath, inputFilePath );
-            }else if(language === 'py'){
-                output = await executePython( filePath , inputFilePath );
+            index++;
+            try {
+                if (language === 'cpp') {
+                    output = await executeCpp(filePath, inputFilePath, timeLimit); // Pass time limit to executeCpp
+                } else if (language === 'java') {
+                    output = await executeJava(filePath, inputFilePath, timeLimit); // Pass time limit to executeJava
+                } else if (language === 'py') {
+                    output = await executePython(filePath, inputFilePath, timeLimit); // Pass time limit to executePython
+                }
+            } catch (error) {
+                if (error.message === 'Time Limit Exceeded') {
+                    verdict = 'Time Limit Exceeded';
+                    break; 
+
+                } else {
+                    verdict = 'Compilation Error';
+                    break; 
+                }
             }
-            if(output !== testCase.output){
+            if (output !== testCase.output) {
                 verdict = "Wrong Answer";
                 break;
             }
         }
-        console.log('verdict', verdict);    
-        // console.log(problemId,code, verdict, language, Date.now());
-        // // console.log(req);
-        // console.log('submission', problemId, req.username, code, verdict, language, Date.now());
-        
+        // console.log('verdict', verdict);
+
         const newSubmission = new Submission({
             problemId: problemId,
             userId: req.username,
@@ -57,23 +63,20 @@ export const submitSolution = async (req, res, next) => {
             language: language,
             submissionTime: Date.now(),
         });
-        // console.log('newSubmission', newSubmission);
-        // console.log('before save')
         await newSubmission.save();
-        // console.log('after save')
-        // console.log('submission', newSubmission);
-        res.status(200).json(verdict);    
-    }
-    catch(error){
+        res.status(200).json({verdict, index});
+    } catch (error) {
         next(error);
     }
 }
+
+
  
 export const runCode = async (req, res, next) => {
-    const { code , input,  language='cpp' } = req.body;
-    if(code === undefined || code === '') {
-        res.status(400).json({ message: "Code is required" });
-    };
+    const { code, input, language = 'cpp', timeLimit } = req.body;
+    if (code === undefined || code === '') {
+        return res.status(400).json({ message: "Code is required" });
+    }
     
     if (
         language !== "cpp" &&
@@ -83,30 +86,58 @@ export const runCode = async (req, res, next) => {
         return res.status(400).json({ error: "Unsupported code language" });
     }
 
-    try{
+    try {
         const filePath = generateFile(code, language);
         const inputFilePath = generateInputFile(input); 
-        if(language === 'cpp'){
-            // console.log('cpp');
-            const output = await executeCpp( filePath , inputFilePath );
-            res.status(200).json({ filePath, output });
+        let output;
 
-        }else if(language === 'java'){
-            // console.log('java');
-            const output = await executeJava( filePath, inputFilePath );
-            res.status(200).json({ filePath, output });
-
-        }else if(language === 'py'){
-            // console.log('py');
-            const output = await executePython( filePath , inputFilePath );
-            res.status(200).json({ filePath, output });
+        switch (language) {
+            case 'cpp':
+                try {
+                    output = await executeCpp(filePath, inputFilePath, timeLimit);
+                    res.status(200).json({ filePath, output });
+                } catch (error) {
+                    if (error.message === 'Time Limit Exceeded') {
+                        output = 'Time Limit Exceeded';                        
+                    } else {
+                        output = error.message;
+                    }
+                    res.json({ filePath, output});
+                }
+                break;
+            case 'java':
+                try {
+                    output = await executeJava(filePath, inputFilePath, timeLimit);
+                    res.status(200).json({ filePath, output });
+                } catch (error) {
+                    if (error.message === 'Time Limit Exceeded') {
+                        output = 'Time Limit Exceeded';                        
+                    } else {
+                        output = error.message;
+                    }
+                    res.json({ filePath, output});
+                }
+                break;
+            case 'py':
+                try {
+                    output = await executePython(filePath, inputFilePath, timeLimit);
+                    res.status(200).json({ filePath, output });
+                } catch (error) {
+                    if (error.message === 'Time Limit Exceeded') {
+                        output = 'Time Limit Exceeded';                        
+                    } else {
+                        output = error.message;
+                    }
+                    res.json({ filePath, output});
+                }
+                break;
+            default:
+                res.status(400).json({ error: "Unsupported code language" });
         }
-    }
-    catch(error){ 
+    } catch (error) { 
         next(error);
     }
 }
-
  
 export const getAllSubmission = async (req, res, next) => {
     try{

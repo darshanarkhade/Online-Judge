@@ -27,6 +27,8 @@ export default function Problem() {
   const [submissions, setSubmissions] = useState([]);
   const [submissionCount, setSubmissionCount] = useState(0);
 
+  const [selectedSubmission, setSelectedSubmission] = useState(null);
+
 
 
   
@@ -87,25 +89,27 @@ export default function Problem() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await newRequest.post("/submit", {
-        code,
-        language: selectedLanguage,
-        problemId: problem._id,
-      });
-      setSubmissionCount(prevCount => prevCount += 1);
+        const response = await newRequest.post("/submit", {
+            code,
+            language: selectedLanguage,
+            problemId: problem._id,
+            timeLimit: problem.timeLimit,
+        });
+        setSubmissionCount(prevCount => prevCount += 1);
 
-      console.log("Response from /submit: ", response);
-      // Check the verdict in the response data and update the output accordingly
-      if (response.data === "Accepted") {
-        setVerdict("Submission accepted");
-      } else {
-        setVerdict("Submission rejected: " + response.data);
-      }
+        const { verdict, index } = response.data;
+
+        // console.log("Response from /submit: ", response);
+        // Check the verdict in the response data and update the output accordingly
+        if (verdict === "Accepted") {
+            setVerdict("Submission accepted");
+        } else {
+            setVerdict(`${verdict} on test case ${index}`);
+        }
     } catch (err) {
-      setVerdict("Error submitting code- "+ err.response.data.message  );
-      console.error("Error submitting code:", err);
+        console.error("Error submitting code:", err);
     }
-}
+};
 
   
   const handleRunCode = async () => {
@@ -116,6 +120,7 @@ export default function Problem() {
         code,
         input: inputValue,
         language: selectedLanguage,
+        timeLimit: problem.timeLimit,
       });
       // console.log("Response from /run: ", response);
       setOutput(response.data.output);
@@ -146,6 +151,9 @@ export default function Problem() {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', options);
   }
+
+
+ 
 
   return (
     <div className="container mx-auto px-4 py-4">
@@ -211,44 +219,63 @@ export default function Problem() {
 
 
 
-            {selectedOption === 'submissions' && (
+              {selectedOption === 'submissions' && (
               <>
                 <h2 className="text-lg font-semibold mb-2 text-blue-700">Submissions:</h2>
                 <div className="w-full overflow-x-auto">
-                  <table className="w-auto border border-gray-300">
+                  <table className="w-full border border-gray-300">
                       <thead>
                         <tr className="bg-gray-100">
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Verdict</th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">When</th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Who</th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Language</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Verdict</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">When</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Who</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Language</th>
                         </tr>
                       </thead>
                     <tbody>
                       {submissions.map((submission) => (
-                        <tr key={submission._id} className={`border-b ${submission.verdict === 'Accepted' ? 'bg-green-100' : 'bg-red-100'}`}>
-                          <td className="px-6 py-4">
+                        <tr 
+                        key={submission._id} className={`cursor-pointer border-b ${submission.verdict === 'Accepted' ? 'bg-green-100' : 'bg-red-100'}`}
+                        onClick={() => setSelectedSubmission(submission)}
+                        style={{ borderBottomWidth: "1px", borderBottomColor: "rgba(0, 0, 0, 0.1)" }}
+
+                        >
+                          <td className="px-4 py-4">
                             <span className="text-sm font-semibold">{submission.verdict}</span>
                           </td>
-                          <td className="px-6 py-4">
+                          <td className="px-4 py-4">
                             <span className="text-sm">{formatDate(submission.submissionTime)}</span>
                           </td>
-                          <td className="px-6 py-4">
+                          <td className="px-4 py-4">
                             <span className="text-sm">{submission.userName}</span>
                           </td>
-                          <td className="px-6 py-4">
+                          <td className="px-4 py-4">
                             <span className="text-sm">{submission.language}</span>
                           </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
+                  {selectedSubmission && (
+                    <div className="fixed inset-0 flex items-center justify-center backdrop-filter backdrop-blur-sm z-50 p-10">
+                        <div className="fixed inset-10 w-70% max-h-80vh overflow-y-auto bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700">
+                            <div className="p-7">
+                            <h1 className="text-lg font-semibold mb-4 text-white">Submission Code</h1>
+                                <SyntaxHighlighter language="c++" style={nord} showLineNumbers wrapLines>
+                                {selectedSubmission.submissionCode}
+                                </SyntaxHighlighter>
+                            </div>
+                            <button className="absolute top-2 right-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300" onClick={() => setSelectedSubmission(null)}  >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                  )}
                 </div>
               </>
             )}
-
-
-
 
           </div>
 
@@ -340,7 +367,7 @@ export default function Problem() {
 
             {selectedSection === 'verdict' && (
               <div className="flex min-h-40 items-center justify-center border border-gray-300 rounded-md p-4 bg-gray-100">
-                <span className={`font-semibold text-lg ${verdict === 'Accepted' ? 'text-green-600' : 'text-red-600'}`}>{verdict}</span>
+                <span className={`font-semibold text-lg ${verdict === 'Submission accepted' ? 'text-green-600' : 'text-red-600'}`}>{verdict}</span>
               </div>
             )}
 
