@@ -1,4 +1,5 @@
 import Submission from "../models/submission.model.js";
+import User from "../models/user.model.js";
 import createError from "../utils/createError.js";
 import { generateFile } from "../codeExecuter/generateFile.js";
 import { executeCpp } from "../codeExecuter/executeCpp.js";
@@ -10,17 +11,13 @@ import TestCases from "../models/testcases.model.js";
 export const submitSolution = async (req, res, next) => {
     try {
         const { code, language = 'cpp', problemId, timeLimit } = req.body; // Assuming timeLimit is passed in req.body
-        if (code === undefined || code === '') {
-            return res.status(400).json({ message: "Code is required" });
-        };
-        if (
-            language !== "cpp" &&
-            language !== "py" &&
-            language !== "java"
-        ) {
-            return res.status(400).json({ error: "Unsupported code language" });
+        if (code === undefined || code.trim() === '') {
+            return next(createError(400, "Code is required"));
         }
-        console.log('problemId', problemId);
+        const supportedLanguages = ["cpp", "py", "java"];
+        if (!supportedLanguages.includes(language)) {
+            return next(createError(400, "Unsupported code language"));
+        }
 
         const filePath = generateFile(code, language);
         let verdict = "Accepted";
@@ -53,7 +50,17 @@ export const submitSolution = async (req, res, next) => {
                 break;
             }
         }
+
+        const currUser= await User.findById(req.username);
+
         // console.log('verdict', verdict);
+        if(verdict === 'Accepted'){
+            const isAlreadySubmitted = await Submission.findOne({ problemId: problemId, userId: req.username });
+            if(!isAlreadySubmitted){ 
+                currUser.noOfProblemSolved = currUser.noOfProblemSolved + 1;
+                await currUser.save();
+            }
+        }
 
         const newSubmission = new Submission({
             problemId: problemId,
@@ -66,7 +73,7 @@ export const submitSolution = async (req, res, next) => {
         await newSubmission.save();
         res.status(200).json({verdict, index});
     } catch (error) {
-        next(error);
+        next(createError(500, error.message));
     }
 }
 
@@ -74,16 +81,12 @@ export const submitSolution = async (req, res, next) => {
  
 export const runCode = async (req, res, next) => {
     const { code, input, language = 'cpp', timeLimit } = req.body;
-    if (code === undefined || code === '') {
-        return res.status(400).json({ message: "Code is required" });
+    if (code === undefined || code.trim() === '') {
+        return next(createError(400, "Code is required"));
     }
-    
-    if (
-        language !== "cpp" &&
-        language !== "py" &&
-        language !== "java"
-    ){
-        return res.status(400).json({ error: "Unsupported code language" });
+    const supportedLanguages = ["cpp", "py", "java"];
+    if (!supportedLanguages.includes(language)) {
+        return next(createError(400, "Unsupported code language"));
     }
 
     try {
@@ -132,54 +135,66 @@ export const runCode = async (req, res, next) => {
                 }
                 break;
             default:
-                res.status(400).json({ error: "Unsupported code language" });
+                next(createError(400, "Unsupported code language" ));
         }
     } catch (error) { 
-        next(error);
+        next(createError(500, error.message));
     }
 }
  
-export const getAllSubmission = async (req, res, next) => {
-    try{
-        const submissions = await Submission.find().sort({ submissionTime: -1 });
-        if (!submissions || submissions.length === 0) {
-            throw createError(404, "No problems found");
-        }
-        res.status(200).json(submissions);
+export const getAllSubmissions = async (req, res, next) => {
+    try {
+      const submissions = await Submission.find().sort({ submissionTime: -1 });
+      res.status(200).json(submissions);
+    } catch (error) {
+      next(createError(500, 'Internal Server Error'));
     }
-    catch(error){
-        next(error);
-    }
-}
-
+};
+  
 export const getSubmissionsByProblemId = async (req, res, next) => {
     try {
       const { problemId } = req.body;
       if (!problemId) {
-        throw createError(400, "Problem ID is required");
+        return next(createError(400, "Problem ID is required"));
       }
-      const submissions = await Submission.find({ problemId: problemId }).sort({ submissionTime: -1 }).limit(10);
-      if (!submissions || submissions.length === 0) {
-        throw createError(404, "No submissions found");
-      }
+      const submissions = await Submission.find({ problemId }).sort({ submissionTime: -1 }).limit(10);
       res.status(200).json(submissions);
     } catch (error) {
-      next(error);
+      next(createError(500, 'Internal Server Error'));
     }
-  };
+};
   
-
-export const getSubmissionByUserId = async (req, res, next) => {
-    try{
-        const { userId } = req.body;
-        const submissions = await Submission.find({ userId: userId }).sort({ submissionTime: -1 });
-        if (!submissions || submissions.length === 0) {
-            throw createError(404, "No submissions found");
+export const getSubmissionsByUserId = async (req, res, next) => {
+    try {
+      const { userId } = req.body;
+      if (!userId) {
+        return next(createError(400, "User ID is required"));
+      }
+      const submissions = await Submission.find({ userId }).sort({ submissionTime: -1 }).limit(10);
+      res.status(200).json(submissions);
+    } catch (error) {
+      next(createError(500, 'Internal Server Error'));
+    }
+};
+  
+export const verdictCounts = async (req, res, next) => {
+    try {
+      const verdicts = await Submission.aggregate([
+        {
+          $group: {
+            _id: '$verdict',
+            count: { $sum: 1 }
+          }
         }
-        res.status(200).json(submissions);
+      ]);
+  
+      const result = verdicts.reduce((acc, curr) => {
+        acc[curr._id] = curr.count;
+        return acc;
+      }, {});
+  
+      res.status(200).json(result);
+    } catch (error) {
+      next(createError(500, 'Internal Server Error'));
     }
-    catch(error){
-        next(error);
-    }
-}
-
+};

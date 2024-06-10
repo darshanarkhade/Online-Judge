@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import newRequest from '../utils/newRequest';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function AddTestCases() {
   const { id } = useParams();
@@ -20,12 +22,32 @@ export default function AddTestCases() {
       await newRequest.post(`/addTestCases/${id}`, testCases);
       // console.log('Test cases have been added successfully');
       // Redirect to some page after successful submission
-      navigate('/');
+      toast.success("Test Cases Added successfully!");
+      setTimeout(() => {
+        navigate(`/`);
+      }, 1000);
     } catch (err) {
+      toast.error(err.response.data.message || "Something went wrong!");
       console.log(err);
       // Handle error
     }
   };
+
+  const handleDelete = async (index) => {
+    try{
+      if(!testCases[index]._id){
+        setTestCases(testCases.filter((_, i) => i !== index));
+        return;
+      }
+      await newRequest.delete(`/deleteTestCase/${testCases[index]._id}`);
+      //_ is used to ignore the first argument which is the element itself
+      setTestCases(testCases.filter((_, i) => i !== index));
+      toast.success("Test Case Deleted!");
+    }catch(err){
+      toast.error(err.response.data.message || "Something went wrong!");
+      console.error('Error deleting test case:', err);
+    }
+  }
 
   const addTestCase = () => {
     setTestCases([...testCases, { input: '', output: '' }]);
@@ -62,6 +84,14 @@ export default function AddTestCases() {
               placeholder="Expected Output"
               className="border border-gray-300 rounded-md p-2"
             />
+            <button
+            type="button"
+            onClick={() => handleDelete(index)}
+            className="bg-red-500 text-white font-semibold py-2 px-3 m-2 rounded-md hover:bg-red-600"
+          >
+            Delete Test Case
+          </button>
+          
           </div>
         ))}
         <button
@@ -78,6 +108,7 @@ export default function AddTestCases() {
           Submit Test Cases
         </button>
       </form>
+      <ToastContainer />
     </div>
   );
 }

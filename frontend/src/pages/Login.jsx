@@ -2,6 +2,8 @@ import React from "react";
 import { useState } from "react";
 import newRequest from "../utils/newRequest";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -18,9 +20,12 @@ export default function Login() {
       });
       //stores the user info in local storage
       localStorage.setItem("currentUser", JSON.stringify(res.data));
-      navigate("/");
+      toast.success("Login successful!");
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
     } catch (err) {
-      console.log(err);
+      toast.error(err.response.data.message || "Login Failed!");
     }
   };
   return (
@@ -66,6 +71,7 @@ export default function Login() {
           </button>
         </form>
       </div>
+      <ToastContainer />
     </div>
   );
 }

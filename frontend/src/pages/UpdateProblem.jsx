@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import newRequest from "../utils/newRequest";
 import { useParams } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function AddProblem() {
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
@@ -28,11 +30,11 @@ export default function AddProblem() {
           problemStatement: response.data.problemStatement,
           sampleInput: response.data.sampleInput,
           sampleOutput: response.data.sampleOutput,
-          memoryLimit: response.data.memoryLimit,
           timeLimit: response.data.timeLimit,
           solution: response.data.solution
         });
       } catch (err) {
+        toast.error(err.response.data.message || "Something went wrong!");
         console.error("Error fetching problem:", err);
       }
     };
@@ -54,8 +56,12 @@ export default function AddProblem() {
       const response = await newRequest.put(`/updateProblem/${id}`, formData);
         console.log(response);
         //lets navigate to the problem page
-      navigate(`/problems`);
+      toast.success("Problem updated successfully!");
+      setTimeout(() => {
+        navigate("/problems");
+      }, 1000);
     } catch (err) {
+      toast.error(err.response.data.message || "Something went wrong!");
       console.log(err);
     }
   };
@@ -129,15 +135,6 @@ export default function AddProblem() {
             onChange={handleChange}
             rows="3"
           />
-          <label className="text-gray-800 font-semibold mb-2">Memory Limit (MB)</label>
-          <input
-            placeholder="Memory Limit"
-            className="bg-gray-200 text-gray-800 border border-gray-300 rounded-md p-2 mb-2 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
-            type="text"
-            name="memoryLimit"
-            value={formData.memoryLimit}
-            onChange={handleChange}
-          />
           <label className="text-gray-800 font-semibold mb-2">Time Limit (sec)</label>
           <input
             placeholder="Time Limit"
@@ -155,6 +152,7 @@ export default function AddProblem() {
           </button>
         </form>
       </div>
+      <ToastContainer />
     </div>
   );
 }

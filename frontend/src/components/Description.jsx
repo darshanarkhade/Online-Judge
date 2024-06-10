@@ -15,7 +15,6 @@ export default function Description({problem}) {
                 {toUpperFirst(problem.difficulty)}
             </p>
             <div className="text-sm text-gray-600 mb-4">
-            <h2 className="text-sm font-semibold mb-2">Memory Limit: {problem.memoryLimit} megabytes</h2>
             <h2 className="text-sm font-semibold mb-2">Time Limit: {problem.timeLimit} seconds</h2>
             </div>
             <hr className="border-b-2 border-gray-300 mb-4" />

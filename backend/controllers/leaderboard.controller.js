@@ -7,6 +7,6 @@ export const getLeaderboard= async (req, res, next)=>{
         res.status(200).json(topPlayers);
     }
     catch(error){
-        next(error);
+        next(createError(500, 'Internal Server Error'));
     }
 }

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import newRequest from "../utils/newRequest";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function AddProblem() {
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
@@ -11,7 +13,6 @@ export default function AddProblem() {
     problemStatement: '',
     sampleInput: '',
     sampleOutput: '',
-    memoryLimit: '',
     timeLimit: '',
     solution: '',
   });
@@ -30,8 +31,12 @@ export default function AddProblem() {
     try {
       const response = await newRequest.post("/addProblem", formData);
       const id = response.data; // Extract problemId from response
-      navigate(`/addTestCases/${id}`);
+      toast.success("Problem Added successfully!");
+      setTimeout(() => {
+        navigate(`/addTestCases/${id}`);
+      }, 1000);
     } catch (err) {
+      toast.error(err.response.data.message || "Something went wrong!");
       console.log(err);
     }
   };
@@ -105,15 +110,6 @@ export default function AddProblem() {
             onChange={handleChange}
             rows="3"
           />
-          <label className="text-gray-800 font-semibold mb-2">Memory Limit (MB)</label>
-          <input
-            placeholder="Memory Limit"
-            className="bg-gray-200 text-gray-800 border border-gray-300 rounded-md p-2 mb-2 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
-            type="text"
-            name="memoryLimit"
-            value={formData.memoryLimit}
-            onChange={handleChange}
-          />
           <label className="text-gray-800 font-semibold mb-2">Time Limit (sec)</label>
           <input
             placeholder="Time Limit"
@@ -131,6 +127,7 @@ export default function AddProblem() {
           </button>
         </form>
       </div>
+      <ToastContainer />
     </div>
   );
 }

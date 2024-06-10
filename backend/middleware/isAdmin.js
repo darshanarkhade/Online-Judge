@@ -5,17 +5,19 @@ export const isAdmin = (req, res, next) => {
   const token = req.cookies.accessToken;
 
   if (!token) {
-    return res.status(401).json({ message: "Auth token is missing" });
+    return next(createError(401, "Auth token is missing"));
   }
-  
+
   try {
-    const decodedToken = jwt.verify(token, process.env.SECRET_KEY); 
+    const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
+
     if (!decodedToken.isAdmin) {
-      return res.status(403).json({ message: "Access denied. Admins only." });
+      return next(createError(403, "Access denied. Admins only."));
     }
+
     req.user = decodedToken; // Add the decoded token to the request object
     next();
   } catch (error) {
-    return res.status(401).json({ message: "Invalid token" });
+    next(createError(401, "Invalid token"));
   }
 };

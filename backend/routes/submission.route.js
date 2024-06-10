@@ -1,14 +1,14 @@
 import express from "express";
-import { getAllSubmission,  submitSolution, runCode, getSubmissionsByProblemId, getSubmissionByUserId} from "../controllers/submission.controller.js";
+import { getAllSubmissions,  submitSolution, runCode, getSubmissionsByProblemId,verdictCounts, getSubmissionsByUserId} from "../controllers/submission.controller.js";
 import { verifyToken } from "../middleware/jwt.js";
 
 const router = express.Router();
 
-router.get("/submissions", getAllSubmission);
+router.get("/submissions", getAllSubmissions);
 router.post("/submit", verifyToken, submitSolution);
-router.post("/getSubmissionsByProblemId", getSubmissionsByProblemId)
-router.get("/getSubmissionsByUserId", getSubmissionByUserId)
-
+router.post("/getSubmissionsByProblemId", getSubmissionsByProblemId);
+router.post("/getSubmissionsByUserId", getSubmissionsByUserId);
+router.get("/verdictCounts", verdictCounts);
  
 router.post("/run", runCode);
 

@@ -30,11 +30,10 @@ const submissionSchema = new Schema({
         "Accepted",
         "Wrong Answer",
         "Time Limit Exceeded",
-        "Runtime Error",
         "Compilation Error",
       ],
       message:
-        "Status should be either Accepted, Wrong Answer, Time Limit Exceeded, Runtime Error, or Compilation Error",
+        "Status should be either Accepted, Wrong Answer, Time Limit Exceeded or Compilation Error",
     },
   },
   language: {

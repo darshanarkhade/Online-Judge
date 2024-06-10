@@ -14,6 +14,10 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { nord } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import Description from "../components/Description";
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 export default function Problem() {
   const { id } = useParams();
   const [problem, setProblem] = useState(null);
@@ -51,6 +55,7 @@ export default function Problem() {
         const response = await newRequest.get(`/problems/${id}`);
         setProblem(response.data);                                      
       } catch (err) {
+        toast.error(err.response.data.message || "Something went wrong!");
         console.error("Error fetching problem:", err);
       }
     };
@@ -77,6 +82,7 @@ export default function Problem() {
           );
           setSubmissions(submissionsWithNames);
         } catch (err) {
+          toast.error(err.response.data.message || "Error fetching submissions");
           console.error("Error fetching submissions:", err);
         }
       }
@@ -107,6 +113,7 @@ export default function Problem() {
             setVerdict(`${verdict} on test case ${index}`);
         }
     } catch (err) {
+        toast.error(err.response.data.message || "Something went wrong!");
         console.error("Error submitting code:", err);
     }
 };
@@ -125,12 +132,7 @@ export default function Problem() {
       // console.log("Response from /run: ", response);
       setOutput(response.data.output);
     } catch (err) {
-      if(err.response.data===undefined){
-        setOutput("Error running code");
-      }
-      // console.log(err.response.data);
-      // console.log(err.response.data.message);
-      setOutput(err.response.data.message);
+      toast.error(err.response.data.message || "Something went wrong!");
       console.error("Error running code:", err);
     }
   }
@@ -151,9 +153,6 @@ export default function Problem() {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', options);
   }
-
-
- 
 
   return (
     <div className="container mx-auto px-4 py-4">
@@ -375,6 +374,7 @@ export default function Problem() {
 
 
           </div>
+          <ToastContainer />
         </div>
       )}
     </div>

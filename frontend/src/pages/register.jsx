@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import newRequest from "../utils/newRequest";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Register() {
   const [user, setUser] = useState({
@@ -21,17 +22,22 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await newRequest.post("/register", user);
-      navigate("/login");
+      const response = await newRequest.post("/register", user);
+      console.log(response); 
+      toast.success("User has been registered");
+      setTimeout(() => {
+        navigate("/login");
+      }, 1000);
     } catch (err) {
-      console.log(err);
+      toast.error(err.response.data.message || "Register Failed!"); 
+
     }
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <a href="/" className="text-3xl font-bold text-blue-500 mt-4 mb-8 cursor-pointer">
-      CodeQuest
+        CodeQuest
       </a>
       <div className="w-full max-w-md bg-white rounded-lg shadow-md p-6">
         <h2 className="text-2xl font-bold text-gray-800 mb-4">Register</h2>
@@ -84,6 +90,7 @@ export default function Register() {
           </button>
         </form>
       </div>
+      <ToastContainer />
     </div>
   );
 }

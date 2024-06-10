@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import newRequest from '../utils/newRequest';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function UpdateTestCases() {
   const { id } = useParams();
@@ -38,8 +40,12 @@ export default function UpdateTestCases() {
           .filter((testCase) => !testCase._id)
           .map((testCase) => newRequest.post(`/addTestCase/${id}`, testCase))
       );
-      navigate('/');
+      toast.success("Test Cases Updated!");
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
     } catch (err) {
+      toast.error(err.response.data.message || "Something went wrong!");
       console.error('Error updating test cases:', err);
     }
   };
@@ -65,7 +71,9 @@ export default function UpdateTestCases() {
         input: testCases[index].input,
         output: testCases[index].output,
       });
+      toast.success("Test Case Updated!");
     } catch (err) {
+      toast.error(err.response.data.message || "Something went wrong!");
       console.error('Error updating test case:', err);
     }
   };
@@ -79,7 +87,9 @@ export default function UpdateTestCases() {
       await newRequest.delete(`/deleteTestCase/${testCases[index]._id}`);
       //_ is used to ignore the first argument which is the element itself
       setTestCases(testCases.filter((_, i) => i !== index));
+      toast.success("Test Case Deleted!");
     }catch(err){
+      toast.error(err.response.data.message || "Something went wrong!");
       console.error('Error deleting test case:', err);
     }
   }
@@ -143,6 +153,7 @@ export default function UpdateTestCases() {
           Add all New Test Cases
         </button>
       </form>
+      <ToastContainer />
     </div>
   );
 }
