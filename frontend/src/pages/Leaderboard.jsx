@@ -21,21 +21,6 @@ export default function Leaderboard() {
 
         fetchTopPlayers();
     }, []);
-    
-
-    // const topPlayers = [
-    //     { id: 1, name: "Player 1", score: 100 },
-    //     { id: 2, name: "Player 2", score: 95 },
-    //     { id: 3, name: "Player 3", score: 90 },
-    //     { id: 4, name: "Player 4", score: 85 },
-    //     { id: 5, name: "Player 5", score: 80 },
-    //     { id: 6, name: "Player 6", score: 75 },
-    //     { id: 7, name: "Player 7", score: 70 },
-    //     { id: 8, name: "Player 8", score: 65 },
-    //     { id: 9, name: "Player 9", score: 60 },
-    //     { id: 10, name: "Player 10", score: 55 },
-    //   ];
-      
 
       return (
         <>

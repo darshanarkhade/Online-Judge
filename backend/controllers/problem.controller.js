@@ -1,6 +1,7 @@
 import Problem from "../models/problem.model.js";
 import createError from "../utils/createError.js";
 import TestCases from "../models/testcases.model.js";
+import Submission from "../models/submission.model.js";
 
 export const getAllProblems = async (req, res, next) => {
   try {
@@ -55,10 +56,11 @@ export const addProblem = async (req, res, next) => {
 export const deleteProblem = async (req, res, next) => {
 try{
   const {id}=req.params;
-  const problem = await Problem.findOneAndDelete({problemId:id});
-  if(!problem){
-    return next(createError(404,"Problem not found")); 
-  }
+  const currentProblem = await Problem.findOne({problemId:id});
+  await Problem.findOneAndDelete({problemId:id});
+  const probId = currentProblem._id;
+  await TestCases.deleteMany({problemId:probId});
+  await Submission.deleteMany({problemId:probId});
   res.status(200).send("Problem deleted successfully");
 }catch(error){
   next(createError(500, 'Internal Server Error'));

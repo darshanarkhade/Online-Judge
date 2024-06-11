@@ -70,14 +70,14 @@ export default function AddTestCases() {
         <h3 className="text-lg font-semibold mb-2">Enter the Input and Output values </h3>
         {testCases.map((testCase, index) => (
           <div key={index} className="mb-4">
-            <input
+            <textarea
               type="text"
               value={testCase.input}
               onChange={(e) => handleChange(index, 'input', e.target.value)}
               placeholder="Input"
               className="border border-gray-300 rounded-md p-2 mr-2"
             />
-            <input
+            <textarea
               type="text"
               value={testCase.output}
               onChange={(e) => handleChange(index, 'output', e.target.value)}

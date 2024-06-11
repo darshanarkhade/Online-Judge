@@ -16,12 +16,21 @@ export default function Profile() {
   // const [verdicts, setVerdicts] = useState([]);
   const [selectedSubmission, setSelectedSubmission] = useState(null);
   const [submissions, setSubmissions] = useState([]);
+  // const [loggedIn, setLoggedIn] = useState(false);
 
   // useEffect(() => {
-  //   const cookie= newRequest.get('/cookies');
-  //   console.log(cookie);
-  // }
-  // ,[]);
+  //   const checkLoggedIn = async () => { 
+  //     try {
+  //       const info = await newRequest.get("/isAuth");
+  //       if(info.data.isAuthenticated) setLoggedIn(true);        
+  //     }
+  //     catch (err) {
+  //       toast.error(err.response.data.message || "Something went wrong!");
+  //       console.error("Error checking if logged in:", err);
+  //     }
+  //   };
+  //   checkLoggedIn();
+  // }, []);
   
 
   useEffect(() => {
@@ -38,7 +47,7 @@ export default function Profile() {
         const response = await newRequest.post(`/getSubmissionsByUserId`, { userId: userResponse.data._id });
         const submissionsWithNames = await Promise.all(
           response.data.map(async (submission) => {
-            const problemResponse = await newRequest.get(`/problem/${submission.problemId}`);
+            const problemResponse = await newRequest.get(`/eachProblem/${submission.problemId}`);
             return {
               ...submission,
               problemName: problemResponse.data.problemTitle,

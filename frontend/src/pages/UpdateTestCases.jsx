@@ -103,14 +103,14 @@ export default function UpdateTestCases() {
         //key is used to uniquely identify each element in the list
         <div key={index} className="mb-4">
           <p>Test Case {index + 1}</p>
-          <input
+          <textarea
             type="text"
             value={testCase.input}
             onChange={(e) => handleChange(index, 'input', e.target.value)}
             placeholder="Input"
             className="border border-gray-300 rounded-md p-2 mr-2"
           />
-          <input
+          <textarea
             type="text"
             value={testCase.output}
             onChange={(e) => handleChange(index, 'output', e.target.value)}

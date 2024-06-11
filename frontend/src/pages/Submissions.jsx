@@ -15,9 +15,10 @@ export default function Submission() {
     const fetchSubmissions = async () => {
       try {
         const response = await newRequest.get("/submissions");
+        console.log("response", response.data);
         const submissionsWithNames = await Promise.all(
           response.data.map(async (submission) => {
-            const problemResponse = await newRequest.get(`/problem/${submission.problemId}`);
+            const problemResponse = await newRequest.get(`/eachProblem/${submission.problemId}`);
             const userResponse = await newRequest.get(`/users/${submission.userId}`);
             return {
               ...submission,
@@ -26,6 +27,7 @@ export default function Submission() {
             };
           })
         );
+        console.log("submissionsWithNames", submissionsWithNames);
         setSubmissions(submissionsWithNames);
         setIsLoading(false); 
       } catch (err) {
@@ -35,7 +37,10 @@ export default function Submission() {
     };
 
     fetchSubmissions();
+    console.log("submissions in useeffect ", submissions);  
   }, []);
+
+  console.log("submissions", submissions);
 
   const handlePageClick = (data) => {
     setCurrentPage(data.selected);

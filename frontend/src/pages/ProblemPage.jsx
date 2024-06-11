@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FiPlay, FiUpload } from "react-icons/fi";
 import { useParams } from "react-router-dom";
 import newRequest from "../utils/newRequest";
+import newRequest2 from "../utils/newRequest2";
 
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-java";
@@ -13,9 +14,12 @@ import { FiEdit, FiMonitor, FiCheckCircle } from "react-icons/fi";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { nord } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import Description from "../components/Description";
+import Loading from "../components/Loading";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+import axios from "axios";
 
 
 export default function Problem() {
@@ -32,15 +36,15 @@ export default function Problem() {
   const [submissionCount, setSubmissionCount] = useState(0);
 
   const [selectedSubmission, setSelectedSubmission] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-
-
+  const currUser = JSON.parse(localStorage.getItem("currentUser"));
   
   useEffect(() => {
     // console.log("in useEffect for selectedLanguage");
     // Set initial code based on selected language
     if (selectedLanguage === "cpp") {
-      setCode(`// Include the input/output stream library\n#include <iostream>\nusing namespace std;\n\n// Define the main function\nint main() {\n    // Output "Hello CPP!" to the console\n    cout << "Hello CPP!";\n\n    // Return 0 to indicate successful execution\n    return 0;\n}`);
+      setCode(`#include <iostream>\nusing namespace std;\n\nint main() {\n\n   cout << "Hello CPP!";\n\n   return 0;\n}`);
     } else if (selectedLanguage === "py") {
       setCode(`# Define the main function\ndef main():\n    # Output "Hello Python!" to the console\n    print("Hello Python!")\n\n# Call the main function\nif __name__ == "__main__":\n    main()`);
     } else if (selectedLanguage === "java") {
@@ -53,7 +57,8 @@ export default function Problem() {
     const fetchProblem = async () => {
       try {
         const response = await newRequest.get(`/problems/${id}`);
-        setProblem(response.data);                                      
+        setProblem(response.data); 
+        setIsLoading(false);                                     
       } catch (err) {
         toast.error(err.response.data.message || "Something went wrong!");
         console.error("Error fetching problem:", err);
@@ -95,12 +100,21 @@ export default function Problem() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-        const response = await newRequest.post("/submit", {
-            code,
-            language: selectedLanguage,
-            problemId: problem._id,
-            timeLimit: problem.timeLimit,
+        if(!currUser){
+          toast.error("Please login to submit the code");
+          return;
+        }
+        
+        const response = await newRequest2.post("/submit", {
+          code,
+          language: selectedLanguage,
+          problemId: problem._id,
+          timeLimit: problem.timeLimit,
+          userId: currUser._id,
         });
+        
+        console.log("Response from /submit: ", response);
+            
         setSubmissionCount(prevCount => prevCount += 1);
 
         const { verdict, index } = response.data;
@@ -113,7 +127,6 @@ export default function Problem() {
             setVerdict(`${verdict} on test case ${index}`);
         }
     } catch (err) {
-        toast.error(err.response.data.message || "Something went wrong!");
         console.error("Error submitting code:", err);
     }
 };
@@ -123,16 +136,15 @@ export default function Problem() {
     try {
       // console.log(inputValue);
       // console.log(code);
-      const response = await newRequest.post("/run", {
+      const response = await newRequest2.post("/run", {
         code,
         input: inputValue,
         language: selectedLanguage,
         timeLimit: problem.timeLimit,
       });
-      // console.log("Response from /run: ", response);
+      console.log("Response from /run: ", response);
       setOutput(response.data.output);
     } catch (err) {
-      toast.error(err.response.data.message || "Something went wrong!");
       console.error("Error running code:", err);
     }
   }
@@ -153,8 +165,11 @@ export default function Problem() {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', options);
   }
-
   return (
+    <>
+    {isLoading ? (
+        <Loading />
+      ) : (
     <div className="container mx-auto px-4 py-4">
       {problem && (
         <div className="flex flex-col md:flex-row bg-white shadow-2xl rounded-lg p-6 border border-gray-300">
@@ -378,5 +393,7 @@ export default function Problem() {
         </div>
       )}
     </div>
+      )}
+    </>
   );
 }

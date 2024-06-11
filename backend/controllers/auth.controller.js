@@ -89,6 +89,9 @@ export const isAuth = (req, res, next) => {
   try {
     const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
     // Assuming decodedToken contains necessary user information
+    if (!decodedToken) {
+      return res.status(401).json({ error: 'Invalid token' });
+    }
     res.status(200).json({ isAuthenticated: true, userData: decodedToken });
   } catch (error) {
     console.error('Invalid token:', error);

@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import newRequest from "../utils/newRequest";
 import { FaTrash } from 'react-icons/fa';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 export default function ProblemRow({ number, name, difficulty, id, isAdmin, mongooseId }) {
   // Function to determine background color based on difficulty
   const getDifficultyColor = (difficulty) => {
@@ -27,9 +30,9 @@ export default function ProblemRow({ number, name, difficulty, id, isAdmin, mong
   // Function to delete a problem
   const deleteProblem = async (id) => {
     try {
-      await newRequest.delete(`/deleteProblem/${id}`);
-      await newRequest.delete(`/deleteTestCasesOfProblem/${mongooseId}`);
+      await newRequest.delete(`/deleteProblem/${id}`, {mongooseId});
       window.location.reload();
+      toast.success('Problem deleted successfully!');
       // console.log(response.data);
       // Update the list of problems
       // I am not sure how to do this
@@ -62,6 +65,7 @@ export default function ProblemRow({ number, name, difficulty, id, isAdmin, mong
           </button>
         </td>
       )}
+      <ToastContainer />
     </tr>
   );
 }

@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/problems', getAllProblems);
 router.get('/problems/:id', getProblemDetails);
-router.get('/problem/:id', getProblemById);
+router.get('/eachProblem/:id', getProblemById);
  
 // Admin route
 router.post('/addProblem', isAdmin, addProblem);
