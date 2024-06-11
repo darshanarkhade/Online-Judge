@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import SubmissionRow from "../components/SubmissionRow";
-import newRequest from "../utils/newRequest";
+import SubmissionRow from "../components/SubmissionRow.jsx";
+import newRequest from "../utils/newRequest.js";
 import ReactPaginate from "react-paginate";
-import Loading from "../components/Loading";
+import Loading from "../components/Loading.jsx";
 
 export default function Submission() {
   const [submissions, setSubmissions] = useState([]);

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { AiOutlineUser } from "react-icons/ai";
-import newRequest from "../utils/newRequest";
+import newRequest from "../utils/newRequest.js";
 import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {

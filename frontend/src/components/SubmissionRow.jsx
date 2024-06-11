@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import CodeDetails from "./CodeDetails";
+import CodeDetails from "./CodeDetails.jsx";
 
 export default function SubmissionRow({ number, name, language, time, code, verdict, submiittedBy }) {
   const [isCodeDetailsOpen, setIsCodeDetailsOpen] = useState(false);

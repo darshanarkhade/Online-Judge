@@ -1,19 +1,19 @@
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
-import Home from "./pages/Home";
-import ErrorPage from "./pages/Error";
-import Profile from "./pages/Profile";
-import Submissions from "./pages/Submissions";
-import Register from "./pages/Register";
-import Login from "./pages/Login";
-import ProblemPage from "./pages/ProblemPage";
-import Navbar from "./components/Navbar";
-import Leaderboard from "./pages/Leaderboard";
-import AddProblem from "./pages/AddProblem";
-import AddTestCases from "./pages/AddTestCases";
-import AllProblems from "./pages/AllProblems";
-import UpdateProblem from "./pages/UpdateProblem";
-import UpdateTestCases from "./pages/UpdateTestCases";
-import Loading from "./components/Loading";
+import Home from "./pages/Home.jsx";
+import ErrorPage from "./pages/Error.jsx";
+import Profile from "./pages/Profile.jsx";
+import Submissions from "./pages/Submissions.jsx";
+import Register from "./pages/Register.jsx";
+import Login from "./pages/Login.jsx";
+import ProblemPage from "./pages/ProblemPage.jsx";
+import Navbar from "./components/Navbar.jsx";
+import Leaderboard from "./pages/Leaderboard.jsx";
+import AddProblem from "./pages/AddProblem.jsx";
+import AddTestCases from "./pages/AddTestCases.jsx";
+import AllProblems from "./pages/AllProblems.jsx";
+import UpdateProblem from "./pages/UpdateProblem.jsx";
+import UpdateTestCases from "./pages/UpdateTestCases.jsx";
+import Loading from "./components/Loading.jsx";
 
 function App() {
   const Layout = () => {

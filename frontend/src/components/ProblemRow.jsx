@@ -1,7 +1,7 @@
 // ProblemRow.js
 import React from "react";
 import { Link } from "react-router-dom";
-import newRequest from "../utils/newRequest";
+import newRequest from "../utils/newRequest.js";
 import { FaTrash } from 'react-icons/fa';
 
 import { ToastContainer, toast } from 'react-toastify';

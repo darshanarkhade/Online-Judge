@@ -1,8 +1,8 @@
 // AllProblems.js
 import React, { useState, useEffect } from "react";
-import ProblemRow from "../components/ProblemRow";
-import newRequest from "../utils/newRequest";
-import Loading from "../components/Loading";
+import ProblemRow from "../components/ProblemRow.jsx";
+import newRequest from "../utils/newRequest.js";
+import Loading from "../components/Loading.jsx";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ReactPaginate from "react-paginate";

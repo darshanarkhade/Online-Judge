@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react'
-import { useState } from 'react';
-import newRequest from '../utils/newRequest';
-import Loading from '../components/Loading';
+import React, { useEffect, useState } from 'react';
+import newRequest from '../utils/newRequest.js';
+import Loading from '../components/Loading.jsx';
 
 export default function Leaderboard() {
     const [topPlayers, setTopPlayers] = useState([]);

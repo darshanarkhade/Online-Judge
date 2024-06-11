@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { FiPlay, FiUpload } from "react-icons/fi";
 import { useParams } from "react-router-dom";
-import newRequest from "../utils/newRequest";
-import newRequest2 from "../utils/newRequest2";
+import newRequest from "../utils/newRequest.js";
+import newRequest2 from "../utils/newRequest2.js";
 
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-java";
@@ -13,13 +13,11 @@ import { FiBook, FiCode, FiClipboard } from "react-icons/fi";
 import { FiEdit, FiMonitor, FiCheckCircle } from "react-icons/fi";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { nord } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import Description from "../components/Description";
-import Loading from "../components/Loading";
+import Description from "../components/Description.jsx";
+import Loading from "../components/Loading.jsx";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-import axios from "axios";
 
 
 export default function Problem() {

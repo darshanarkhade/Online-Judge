@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
-import newRequest from "../utils/newRequest";
-import Loading from "../components/Loading";
+import newRequest from "../utils/newRequest.js";
+import Loading from "../components/Loading.jsx";
 // import { PieChart } from "react-minimal-pie-chart";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { nord } from 'react-syntax-highlighter/dist/esm/styles/prism';

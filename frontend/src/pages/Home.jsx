@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import 'tailwindcss/tailwind.css';
-import AllProblems from './AllProblems';
+import AllProblems from './AllProblems.jsx';
 
 const Home = () => {
 
