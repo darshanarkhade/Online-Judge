@@ -24,7 +24,6 @@ const executeJava = async (filePath, inputPath, timeLimit) => {
                 reject(new Error(`Compilation Error: ${compileStderr}`));
                 return;
             }
-            const adjustedTimeLimit = timeLimit + 0.1; 
             // Execute the compiled Java class
             const child = execFile('java', ['-cp', outputPath, uniqueName], { timeout: timeLimit * 1000 }, (execError, stdout, stderr) => {
                 if (execError) {
@@ -38,6 +37,13 @@ const executeJava = async (filePath, inputPath, timeLimit) => {
                 } else {
                     resolve(stdout.trim());
                 }
+                // Cleanup the compiled class file
+                fs.unlink(classFilePath, (err) => {
+                    if (err) {
+                        console.error(`Failed to delete class file: ${classFilePath}`, err);
+                    }
+                });
+                
             });
 
             // Pipe input file to the child process

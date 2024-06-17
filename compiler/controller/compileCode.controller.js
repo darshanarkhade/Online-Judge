@@ -8,10 +8,14 @@ import { generateInputFile } from "../codeExecuter/generateInputFile.js";
 import TestCases from "../models/testCases.model.js";
 import Submission from "../models/submission.model.js";
 import User from "../models/user.model.js";
+import fs from 'fs';
 
 export const submitSolution = async (req, res, next) => {
     try {
         const { code, language = 'cpp', problemId, timeLimit, userId } = req.body; 
+        if(!userId){
+            return next(createError(400, "User ID is required"));
+        }
         if (!code || code.trim() === '') {
             return next(createError(400, "Code is required"));
         }
@@ -43,7 +47,16 @@ export const submitSolution = async (req, res, next) => {
                     verdict = 'Compilation Error';
                 }
                 break;
+            } finally {
+                fs.unlink(inputFilePath, (err) => {
+                    if (err) {
+                        console.error(`Failed to delete file: ${inputFilePath}`, err);
+                    }else{
+                        console.log("Deleted input file : ", inputFilePath);
+                    }
+                });
             }
+            
             output = output.replace(/\r\n/g, '\n');
             testCase.output = testCase.output.replace(/\r\n/g, '\n');
 
@@ -53,10 +66,17 @@ export const submitSolution = async (req, res, next) => {
             }
         }
 
-        const currUser = await User.findById(userId);
+        fs.unlink(filePath, (err) => {
+            if (err) {
+                console.error(`Failed to delete file: ${filePath}`, err);
+            }else{
+                console.log("Deleted file: ", filePath);
+            }
+        });
 
+        const currUser = await User.findById(userId);
         if (verdict === 'Accepted') {
-            const isAlreadySubmitted = await Submission.findOne({ problemId: problemId, userId: req.username });
+            const isAlreadySubmitted = await Submission.findOne({ problemId: problemId, userId: currUser._id, verdict: 'Accepted'});
             if (!isAlreadySubmitted) { 
                 currUser.noOfProblemSolved = currUser.noOfProblemSolved + 1;
                 await currUser.save();
@@ -99,7 +119,7 @@ export const runCode = async (req, res, next) => {
                 output = await executeJava(filePath, inputFilePath, timeLimit);
             } else if (language === 'py') {
                 output = await executePython(filePath, inputFilePath, timeLimit);
-            }
+            } 
             res.status(200).json({ filePath, output });
         } catch (error) {
             if (error.message === 'Time Limit Exceeded') {
@@ -108,7 +128,23 @@ export const runCode = async (req, res, next) => {
                 output = error.message;
             }
             res.json({ filePath, output });
+        } finally {
+            fs.unlink(filePath, (err) => {
+                if (err) {
+                    console.error(`Failed to delete file: ${filePath}`, err);
+                }else{
+                    console.log("Deleted file: ", filePath);
+                }
+            });
+            fs.unlink(inputFilePath, (err) => {
+                if (err) {
+                    console.error(`Failed to delete file: ${inputFilePath}`, err);
+                }else{
+                    console.log("Deleted input file : ", inputFilePath);
+                }
+            });
         }
+        
     } catch (error) {
         next(createError(500, error.message));
     }

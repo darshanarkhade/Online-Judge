@@ -51,14 +51,17 @@ export const login = async (req, res, next) => {
     const token = jwt.sign(
       { id: user._id, isAdmin: user.isAdmin },
       process.env.SECRET_KEY,
-      { expiresIn: "10y" }
+      { expiresIn: "30d" }
     );
 
     const { password: userPassword, ...info } = user._doc;
     res
       .cookie("accessToken", token, {
         httpOnly: true,
-        maxAge: 10*12*30*24*3600000,
+        maxAge: 30*24*3600000,
+        sameSite: "none",
+        secure: true,
+        domain : ".darshan0203.live",
       })
       .status(200)
       .send(info);

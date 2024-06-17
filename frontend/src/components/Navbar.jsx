@@ -4,16 +4,11 @@ import newRequest from "../utils/newRequest.js";
 import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
   const navigate = useNavigate();
-
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-  const handleLogout=async (e)=>{
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const handleLogout = async () => {
     try {
       await newRequest.post("/logout");
       localStorage.setItem("currentUser", null);
@@ -21,75 +16,98 @@ export default function Navbar() {
     } catch (err) {
       console.log(err);
     }
-  }
+  };
 
   return (
-    <nav className=" border-gray-200 dark:bg-gray-900 relative">
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <a href="/" className="flex pl-4 items-center space-x-3 rtl:space-x-reverse">
-          <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">CodeQuest</span>
-        </a>
-        
-        <div className="items-center justify-center hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
-          <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-            <li>
-              <a href="/problems" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Problems</a>
-            </li>
-            <li>
-              <a href="/submissions" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Submissions</a>
-            </li>
-            <li>
-              <a href="/leaderboard" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Leaderboard</a>
-            </li>
-            {currentUser &&  currentUser.isAdmin && (
-              <li>
-              <a href="/addProblem" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Add Problem</a>
-            </li>
-            )
-
-            }
-          </ul>
+    <nav className="bg-gray-900 text-white p-4 shadow-lg">
+      <div className="max-w-screen-xl mx-auto flex flex-wrap items-center justify-between">
+        <div className="flex  ">
+        <img src="/logo.png" alt="logo" className="w-8 h-8 mx-1" />
+        <a href="/" className="text-2xl font-semibold transition duration-300">CodeQuest</a>
         </div>
-        {currentUser ? (
-            <div className="flex pr-8 items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse relative">
-            <button type="button" className="flex text-sm bg-white-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" onClick={toggleDropdown}>
-                <span className="sr-only">Open user menu</span>
-                <AiOutlineUser color="#ffffff" size={25} />
-            </button>
+        {/* Main navigation */}
+        <div className="hidden md:flex md:space-x-8">
+          <a href="/problems" className="hover:text-blue-500 transition duration-300">Problems</a>
+          <a href="/submissions" className="hover:text-blue-500 transition duration-300">Submissions</a>
+          <a href="/leaderboard" className="hover:text-blue-500 transition duration-300">Leaderboard</a>
+          {currentUser && currentUser.isAdmin && (
+            <a href="/addProblem" className="hover:text-blue-500 transition duration-300">Add Problem</a>
+          )}
+        </div>
 
-            {/* <!-- Dropdown menu --> */}
-            {isDropdownOpen && (
-              <div className="z-50 w-32 absolute top-full right-0 mt-2 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">
-                {/* <div className="px-4 py-3">
-                  <span className="block text-sm text-gray-900 dark:text-white">User</span>
-                  <span className="block text-sm text-gray-500 truncate dark:text-gray-400">name@gmail.com</span>
-                </div> */}
-                <ul className="py-2">
-                  <li>
-                    <a href="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
-                  </li>
-                  <li>
-                    <a href="/" onClick={handleLogout} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
-                  </li>
-                </ul>
-              </div>
+        {/* User actions */}
+        <div className="hidden md:flex items-center space-x-4 relative">
+          {currentUser ? (
+            <>
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="flex items-center space-x-2 hover:text-blue-500 transition duration-300 focus:outline-none"
+              >
+                <AiOutlineUser size={20} />
+                <span>Profile</span>
+              </button>
+              {menuOpen && (
+                <div className="absolute right-3 top-5 mt-2 w-48 bg-white text-gray-900 rounded-lg shadow-lg py-2 transform transition-transform duration-300 ease-in-out origin-top-right scale-95">
+                  <a href="/profile" className="block px-4 py-2 hover:bg-gray-200 transition duration-300">Profile</a>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left block px-4 py-2 hover:bg-gray-200 transition duration-300"
+                  >
+                    Sign out
+                  </button>
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              <a href="/login" className="hover:text-blue-500 transition duration-300">Login</a>
+              <a href="/register" className="hover:text-blue-500 transition duration-300">Register</a>
+            </>
+          )}
+        </div>
+
+        {/* Mobile menu button */}
+        <div className="md:hidden">
+          <button
+            className="text-white focus:outline-none"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+            </svg>
+          </button>
+        </div>
+
+        {/* Mobile menu */}
+        {menuOpen && (
+          <div className="w-full md:hidden mt-4 space-y-2 bg-gray-800 p-4 rounded-lg shadow-lg">
+            <a href="/problems" className="block hover:text-blue-500 transition duration-300">Problems</a>
+            <a href="/submissions" className="block hover:text-blue-500 transition duration-300">Submissions</a>
+            <a href="/leaderboard" className="block hover:text-blue-500 transition duration-300">Leaderboard</a>
+            {currentUser && currentUser.isAdmin && (
+              <a href="/addProblem" className="block hover:text-blue-500 transition duration-300">Add Problem</a>
             )}
-        </div>
-        )
-        : (
-          <div className="flex items-center justify-center w-full md:flex md:w-auto md:order-1" id="navbar-user">
-            <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-              <li>
-                <a href="/login" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Login</a>
-              </li>
-              <li>
-                <a href="/register" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Register</a>
-              </li>
-          
-            </ul>
+            {currentUser ? (
+              <>
+                <a href="/profile" className="block flex items-center space-x-2 hover:text-blue-500 transition duration-300">
+                  <AiOutlineUser size={20} />
+                  <span>Profile</span>
+                </a>
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left block hover:text-blue-500 transition duration-300"
+                >
+                  Sign out
+                </button>
+              </>
+            ) : (
+              <>
+                <a href="/login" className="block hover:text-blue-500 transition duration-300">Login</a>
+                <a href="/register" className="block hover:text-blue-500 transition duration-300">Register</a>
+              </>
+            )}
           </div>
-          )
-        }
+        )}
       </div>
     </nav>
   );

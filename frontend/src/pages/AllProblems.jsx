@@ -17,8 +17,6 @@ export default function AllProblems() {
   useEffect(() => {
     const fetchProblems = async () => {
       try {
-        console.log("env ", process.env.REACT_APP_API_PORT_1);
-
         const response = await newRequest.get("/problems");
         setProblems(response.data);
         setIsLoading(false);

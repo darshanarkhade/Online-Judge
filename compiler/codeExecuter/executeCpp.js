@@ -38,6 +38,13 @@ const executeCpp = async (filePath, inputPath, timeLimit) => {
                 } else {
                     resolve(stdout.trim());
                 }
+
+                // Cleanup the output file
+                fs.unlink(outputFilePath, (err) => {
+                    if (err) {
+                        console.error(`Failed to delete output file: ${outputFilePath}`, err);
+                    } 
+                });
             });
         });
     });

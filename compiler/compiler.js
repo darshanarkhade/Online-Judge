@@ -9,12 +9,14 @@ import { submitSolution, runCode } from "./controller/compileCode.controller.js"
 
 const app = express();
 
+dotenv.config();
+const CLIENT_URL = process.env.CLIENT_URL;
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:3000", credentials: true })); 
+app.use(cors({ origin: CLIENT_URL, credentials: true })); 
 app.use(cookieParser()); // Parse cookies
 
-dotenv.config(); 
  
 const PORT= process.env.PORT;
 const MONGO_URI = process.env.MONGO_URI;

@@ -19,11 +19,12 @@ const app = express();
 // Constants
 const PORT = process.env.PORT;
 const MONGO_URI = process.env.MONGO_URI;
+const CLIENT_URL = process.env.CLIENT_URL;
 
 // Middleware
 app.use(express.json()); // Parse JSON bodies
 app.use(cookieParser()); // Parse cookies
-app.use(cors({ origin: "http://localhost:3000", credentials: true })); 
+app.use(cors({ origin: CLIENT_URL, credentials: true })); 
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 
 // Connect to MongoDB
